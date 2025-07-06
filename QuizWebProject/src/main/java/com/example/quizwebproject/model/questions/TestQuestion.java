@@ -1,6 +1,8 @@
 package com.example.quizwebproject.model.questions;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Transient;
 import org.antlr.v4.runtime.misc.NotNull;
 //import org.jetbrains.annotations.NotNull;
 
@@ -10,15 +12,6 @@ import java.util.List;
 @Entity
 public class TestQuestion extends Question {
 
-    private String question;
-
-    @Lob
-    private String correctAnswers;
-
-    private String userAnswer;
-
-    private String category;
-
     @Lob
     private String savAnswers;
 
@@ -27,38 +20,38 @@ public class TestQuestion extends Question {
     public TestQuestion() {}
 
     public TestQuestion(String question, List<String> correctAnswers, String category, int maxPoints, @NotNull String savAnswers) {
-        this.question = question;
-        setCorrectAnswers(correctAnswers);
+        super(question, String.join(",", correctAnswers), category);
         this.savAnswers = savAnswers.trim();
-        this.category = category;
         this.maxPoints = maxPoints;
-        this.userAnswer = "";
+        setRawUserAnswer(""); // initial blank answer
     }
 
     @Override
     public String getCategory() {
-        return category;
+        return getRawCategory();
     }
 
     @Override
     public void setCategory(String category) {
-        this.category = category;
+        setRawCategory(category);
     }
 
     @Override
     public String getQuestion() {
-        return this.question;
+        return getRawQuestion();
     }
 
     public void setQuestion(String question) {
-        this.question = question;
+        setRawQuestion(question);
     }
 
+    @Override
+    @Transient
     public List<String> getCorrectAnswers() {
-        if (this.correctAnswers == null || this.correctAnswers.isEmpty()) {
-            return new ArrayList<>();
-        }
-        String[] parts = this.correctAnswers.split(",");
+        String raw = getRawCorrectAnswers();
+        if (raw == null || raw.isEmpty()) return new ArrayList<>();
+
+        String[] parts = raw.split(",");
         List<String> list = new ArrayList<>();
         for (String p : parts) {
             list.add(p.trim());
@@ -67,24 +60,23 @@ public class TestQuestion extends Question {
     }
 
     public void setCorrectAnswers(List<String> correctAnswers) {
-        this.correctAnswers = String.join(",", correctAnswers);
+        setRawCorrectAnswers(String.join(",", correctAnswers));
     }
 
     @Override
     public void setUserAnswer(String userAnswer) {
-        this.userAnswer = userAnswer;
+        setRawUserAnswer(userAnswer);
     }
 
     @Override
     public String getUserAnswer() {
-        return this.userAnswer;
+        return getRawUserAnswer();
     }
 
     public List<String> getSavAnswers() {
-        if (this.savAnswers == null || this.savAnswers.isEmpty()) {
-            return new ArrayList<>();
-        }
-        String[] parts = this.savAnswers.split(",");
+        if (savAnswers == null || savAnswers.isEmpty()) return new ArrayList<>();
+
+        String[] parts = savAnswers.split(",");
         List<String> list = new ArrayList<>();
         for (String p : parts) {
             list.add(p.trim());
@@ -98,13 +90,14 @@ public class TestQuestion extends Question {
 
     @Override
     public double getResult() {
-        if (this.userAnswer == null || this.userAnswer.isEmpty()) {
+        String userAns = getRawUserAnswer();
+        if (userAns == null || userAns.isEmpty()) {
             return 0.0;
         }
 
         List<String> correct = getCorrectAnswers();
         List<String> user = new ArrayList<>();
-        for (String part : userAnswer.split(",")) {
+        for (String part : userAns.split(",")) {
             user.add(part.trim());
         }
 
@@ -123,11 +116,13 @@ public class TestQuestion extends Question {
     public String toString() {
         return "TestQuestion {" +
                 "id=" + getId() +
-                ", question='" + question + '\'' +
+                ", question='" + getQuestion() + '\'' +
                 ", correctAnswers=" + getCorrectAnswers() +
-                ", userAnswer='" + userAnswer + '\'' +
+                ", userAnswer='" + getUserAnswer() + '\'' +
                 ", savAnswers=" + getSavAnswers() +
-                ", result=" + getResult() + '\'' +
-                ", cat: " + this.category + '}';
+                ", result=" + getResult() +
+                ", category='" + getCategory() + '\'' +
+                ", maxPoints=" + maxPoints +
+                '}';
     }
 }

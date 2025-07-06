@@ -8,61 +8,64 @@ import java.util.List;
 @Entity
 public class FillBlankQuestion extends Question {
 
-    private String question;
-
-    private String correctAnswer;
-
-    private String userAnswer;
-
-    private String category;
-
     public FillBlankQuestion() {}
 
     public FillBlankQuestion(String question, String category, String correctAnswer) {
-        this.question = question;
-        this.category = category;
-        this.correctAnswer = correctAnswer;
-        this.userAnswer = "";
+        super(question, correctAnswer, category);
+        setRawUserAnswer("");
     }
 
     @Override
     public String getQuestion() {
-        return question;
+        return getRawQuestion();
     }
 
     @Override
     public void setUserAnswer(String userAnswer) {
-        this.userAnswer = userAnswer;
+        setRawUserAnswer(userAnswer);
+    }
+
+    @Override
+    public String getUserAnswer() {
+        return getRawUserAnswer();
+    }
+
+    @Override
+    public String getCategory() {
+        return getRawCategory();
+    }
+
+    @Override
+    public void setCategory(String category) {
+        setRawCategory(category);
     }
 
     @Transient
     @Override
     public List<String> getCorrectAnswers() {
-        return List.of();
+        String correct = getRawCorrectAnswers();
+        if (correct == null || correct.isBlank()) return List.of();
+        return List.of(correct);
     }
 
     @Override
     public double getResult() {
-        if (userAnswer == null) return 0;
-        String ans = userAnswer.toLowerCase();
-        String realAns = correctAnswer.toLowerCase();
-        if(ans.equals(realAns)) return 1.0;
-        return 0;
+        String user = getRawUserAnswer();
+        String correct = getRawCorrectAnswers();
+        if (user == null || correct == null) return 0.0;
+
+        return user.trim().equalsIgnoreCase(correct.trim()) ? 100.0 : 0.0;
     }
 
     @Override
-    public String getUserAnswer() {
-        if (userAnswer == null) return "";
-        return userAnswer;
-    }
-
-    @Override
-    public String getCategory() {
-        return category;
-    }
-
-    @Override
-    public void setCategory(String category) {
-        this.category = category;
+    public String toString() {
+        return "FillBlankQuestion {" +
+                "id=" + getId() +
+                ", question='" + getQuestion() + '\'' +
+                ", correctAnswer='" + getCorrectAnswers() + '\'' +
+                ", userAnswer='" + getUserAnswer() + '\'' +
+                ", result=" + getResult() +
+                ", category='" + getCategory() + '\'' +
+                '}';
     }
 }

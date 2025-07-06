@@ -6,65 +6,58 @@ import jakarta.persistence.Transient;
 import java.util.List;
 
 @Entity
-public class ResponseQuestion extends Question{
-
-    private String question;
+public class ResponseQuestion extends Question {
 
     private String correctAnswer;
-
-    private String userAnswer;
-
     private boolean answerOrdered;
-
-    private String category;
-
     private int maxPoints;
 
     public ResponseQuestion() {}
 
     public ResponseQuestion(String question, String correctAnswer, boolean order, String category, int maxPoints) {
-        this.question = question;
+        super(question, correctAnswer, category); // sets question, correctAnswers, category
         this.correctAnswer = correctAnswer;
-        this.userAnswer = "";
         this.answerOrdered = order;
-        this.category = category;
         this.maxPoints = maxPoints;
     }
 
     public void setQuestion(String question) {
-        this.question = question;
+        setRawQuestion(question);
     }
 
     @Override
     public String getCategory() {
-        return category;
+        return getRawCategory();
     }
 
     @Override
-    public void setCategory(String category) { this.category = category; }
+    public void setCategory(String category) {
+        setRawCategory(category);
+    }
 
     @Override
     public String getQuestion() {
-        return this.question;
+        return getRawQuestion();
     }
 
     @Override
     public void setUserAnswer(String userAnswer) {
-        this.userAnswer = userAnswer;
+        setRawUserAnswer(userAnswer);
     }
 
     @Transient
     @Override
     public List<String> getCorrectAnswers() {
-        return List.of(this.correctAnswer);
+        return List.of(correctAnswer);
     }
 
     @Override
     public double getResult() {
-        String cleanedUser = userAnswer.replaceAll(" ", "");
-        String cleanedCorrect = correctAnswer.replaceAll(" ", "");
+        String userAnswer = getRawUserAnswer();
+        String cleanedUser = userAnswer.replaceAll("\\s+", "");
+        String cleanedCorrect = correctAnswer.replaceAll("\\s+", "");
 
-        if(!this.answerOrdered) {
+        if (!this.answerOrdered) {
             char[] cU = cleanedUser.toCharArray();
             char[] cC = cleanedCorrect.toCharArray();
             java.util.Arrays.sort(cU);
@@ -79,6 +72,7 @@ public class ResponseQuestion extends Question{
 
         for (int i = 0; i <= n; i++) dp[i][0] = i;
         for (int j = 0; j <= m; j++) dp[0][j] = j;
+
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= m; j++) {
                 if (cleanedUser.charAt(i - 1) == cleanedCorrect.charAt(j - 1)) {
@@ -98,17 +92,20 @@ public class ResponseQuestion extends Question{
 
     @Override
     public String getUserAnswer() {
-        return this.userAnswer;
+        return getRawUserAnswer();
     }
 
     @Override
     public String toString() {
         return "ResponseQuestion {" +
                 "id=" + getId() +
-                ", question='" + question + '\'' +
+                ", question='" + getQuestion() + '\'' +
                 ", correctAnswer='" + correctAnswer + '\'' +
-                ", userAnswer='" + userAnswer + '\'' +
-                ", result=" + getResult() + '\'' +
-                ", cat: " + this.category + '}';
+                ", userAnswer='" + getUserAnswer() + '\'' +
+                ", result=" + getResult() +
+                ", category='" + getCategory() + '\'' +
+                ", maxPoints=" + maxPoints +
+                ", ordered=" + answerOrdered +
+                '}';
     }
 }
