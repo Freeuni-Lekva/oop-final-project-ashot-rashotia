@@ -1,4 +1,4 @@
-package com.example.model.users;
+package com.example.quizwebproject.model.users;
 
 import com.example.model.quizes.Quiz;
 import com.example.model.quizes.QuizResult;
