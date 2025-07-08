@@ -15,7 +15,7 @@ public class ResponseQuestion extends Question {
     public ResponseQuestion() {}
 
     public ResponseQuestion(String question, String correctAnswer, boolean order, String category, int maxPoints) {
-        super(question, correctAnswer, category); // sets question, correctAnswers, category
+        super(question, correctAnswer, category);
         this.correctAnswer = correctAnswer;
         this.answerOrdered = order;
         this.maxPoints = maxPoints;
