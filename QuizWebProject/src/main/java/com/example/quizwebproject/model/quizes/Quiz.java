@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -128,17 +127,11 @@ public class Quiz {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+    public void setType(String type) { this.type = type; }
 
-    public boolean isPracticeMode() {
-        return practiceMode;
-    }
+    public boolean isPracticeMode() { return practiceMode; }
 
-    public boolean isMulPages() {
-        return mulPages;
-    }
+    public boolean isMulPages() { return mulPages; }
 
     public boolean isQuickResults() {
         return quickResults;
