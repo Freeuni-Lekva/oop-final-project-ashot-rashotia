@@ -1,8 +1,18 @@
-package com.example.model.users.achievements;
+package com.example.quizwebproject.model.users.achievements;
 
-import jakarta.servlet.http.HttpServlet;
+import com.example.quizwebproject.model.users.User;
+import jakarta.persistence.Entity;
 
+@Entity
 public class PracticeMakesPerfect extends Achievements {
+
+    public PracticeMakesPerfect() {
+        super();
+    }
+
+    public PracticeMakesPerfect(User user) {
+        super(user);
+    }
 
     @Override
     public String getName() {
