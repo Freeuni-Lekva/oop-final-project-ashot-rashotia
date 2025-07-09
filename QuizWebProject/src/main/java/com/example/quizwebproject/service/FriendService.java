@@ -1,4 +1,4 @@
-package service;
+package com.example.quizwebproject.service;
 
 import com.example.quizwebproject.repos.FriendRequestRepo;
 import jakarta.transaction.Transactional;
