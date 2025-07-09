@@ -1,13 +1,15 @@
 package com.example.quizwebproject.service;
 
 import com.example.quizwebproject.DTOs.AnnouncementDTO;
+import com.example.quizwebproject.model.quizes.*;
 import com.example.quizwebproject.model.users.Challenge;
-import com.example.quizwebproject.model.users.activities.FriendActivity;
-import com.example.quizwebproject.model.quizes.Quiz;
-import com.example.quizwebproject.model.quizes.QuizResult;
 import com.example.quizwebproject.model.users.User;
+import com.example.quizwebproject.model.users.activities.FriendActivity;
 import com.example.quizwebproject.model.users.admin.Announcement;
-import com.example.quizwebproject.repos.*;
+import com.example.quizwebproject.repos.AnnouncementRepo;
+import com.example.quizwebproject.repos.FriendActivityRepo;
+import com.example.quizwebproject.repos.QuizRepo;
+import com.example.quizwebproject.repos.UserRepo;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,14 @@ public class HomepageService {
     private final UserRepo userRepo;
     private final FriendActivityRepo fracRepo;
 
+    private static final int POPULAR_QUIZ_LIMIT = 10;
+    private static final int RECENT_QUIZ_LIMIT = 20;
+    private static final int USER_QUIZ_LIMIT = 20;
+    private static final int CHALLENGE_LIMIT = 20;
+    private static final int FRIEND_ACTIVITY_LIMIT = 20;
+    private static final int ANNOUNCEMENT_DAYS = 10;
+    private static final int RECENT_DAYS = 1;
+
     public HomepageService(QuizRepo quizRepo, AnnouncementRepo announcementRepo, UserRepo userRepo,
                            FriendActivityRepo fracRepo) {
         this.quizRepo = quizRepo;
@@ -33,8 +43,10 @@ public class HomepageService {
     }
 
     public List<AnnouncementDTO> getRecentAnnouncements(Pageable pageable) {
-        LocalDateTime lastTenDays = LocalDateTime.now().minusDays(10);
-        List<Announcement> announcements = this.announcementRepo.getRecentTenDayAnnouncements(lastTenDays, pageable).getContent();
+        LocalDateTime lastTenDays = LocalDateTime.now().minusDays(ANNOUNCEMENT_DAYS);
+        List<Announcement> announcements = this.announcementRepo
+                .getRecentTenDayAnnouncements(lastTenDays, pageable)
+                .getContent();
         return announcements.stream().map(this::toDto).collect(Collectors.toList());
     }
 
@@ -43,33 +55,33 @@ public class HomepageService {
     }
 
     public List<Quiz> popularQuizs() {
-        return this.quizRepo.findByPopularity(PageRequest.of(0, 10)).getContent();
+        return this.quizRepo.findByPopularity(PageRequest.of(0, POPULAR_QUIZ_LIMIT)).getContent();
     }
 
     public List<Quiz> getRecentQuizs() {
-        LocalDateTime lastDay = LocalDateTime.now().minusDays(1);
-        return this.quizRepo.getDayLastTenQuizs(lastDay, PageRequest.of(0, 20)).getContent();
+        LocalDateTime lastDay = LocalDateTime.now().minusDays(RECENT_DAYS);
+        return this.quizRepo.getDayLastTenQuizs(lastDay, PageRequest.of(0, RECENT_QUIZ_LIMIT)).getContent();
     }
 
     public List<QuizResult> getUserRecentQuizTakes(Long userId) {
-        LocalDateTime lastTenDays = LocalDateTime.now().minusDays(10);
-        return this.userRepo.getRecentUserQuizs(lastTenDays, userId, PageRequest.of(0, 20)).getContent();
+        LocalDateTime lastTenDays = LocalDateTime.now().minusDays(ANNOUNCEMENT_DAYS);
+        return this.userRepo.getRecentUserQuizs(lastTenDays, userId, PageRequest.of(0, USER_QUIZ_LIMIT)).getContent();
     }
 
     public List<Quiz> getRecentQuizCreats(Long userId) {
-        LocalDateTime lastTenDays = LocalDateTime.now().minusDays(10);
-        return this.quizRepo.getRecentUserQuizCreations(userId, lastTenDays, PageRequest.of(0, 20)).getContent();
+        LocalDateTime lastTenDays = LocalDateTime.now().minusDays(ANNOUNCEMENT_DAYS);
+        return this.quizRepo.getRecentUserQuizCreations(userId, lastTenDays, PageRequest.of(0, USER_QUIZ_LIMIT)).getContent();
     }
 
     public List<Challenge> getRecentChallenges(Long userId) {
-        return this.userRepo.getRecentChallenges(userId, PageRequest.of(0, 20));
+        return this.userRepo.getRecentChallenges(userId, PageRequest.of(0, CHALLENGE_LIMIT));
     }
 
     public List<FriendActivity> getRecentFriendActivities(Long userId, Pageable pageable) {
         User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         List<User> friends = user.getFriends();
         List<FriendActivity> friendsRecentActs = new ArrayList<>();
-        LocalDateTime lastDay = LocalDateTime.now().minusDays(1);
+        LocalDateTime lastDay = LocalDateTime.now().minusDays(RECENT_DAYS);
 
         for (User f : friends) {
             List<FriendActivity> recActs = this.fracRepo.findByUserId(f.getId(), lastDay, pageable).getContent();
