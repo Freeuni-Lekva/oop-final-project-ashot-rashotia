@@ -20,14 +20,26 @@ public abstract class Question {
 
     private String category;
 
+    private Double maxPoints;
+
     public Question() {
         // Default
     }
 
-    public Question(String question, String correctAnswers, String category) {
+    public Question(String question, String correctAnswers, String category, Double maxPoints) {
         this.question = question;
         this.correctAnswers = correctAnswers;
         this.category = category;
+        this.maxPoints = maxPoints;
+
+    }
+
+    public void setRawMaxPoints(Double maxPoints) {
+        this.maxPoints = maxPoints;
+    }
+
+    public Double getRawMaxPoints(){
+        return maxPoints;
     }
 
     public Long getId() {
@@ -66,6 +78,8 @@ public abstract class Question {
         this.category = category;
     }
 
+    public abstract void setMaxPoints(Double maxPoints);
+    public abstract Double getMaxPoints();
     public abstract String getQuestion();
     public abstract void setUserAnswer(String userAnswer);
     public abstract List<String> getCorrectAnswers();

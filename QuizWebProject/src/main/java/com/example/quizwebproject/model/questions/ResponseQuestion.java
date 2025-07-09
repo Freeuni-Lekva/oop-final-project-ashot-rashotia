@@ -10,19 +10,27 @@ public class ResponseQuestion extends Question {
 
     private String correctAnswer;
     private boolean answerOrdered;
-    private int maxPoints;
 
     public ResponseQuestion() {}
 
-    public ResponseQuestion(String question, String correctAnswer, boolean order, String category, int maxPoints) {
-        super(question, correctAnswer, category);
+    public ResponseQuestion(String question, String correctAnswer, boolean order, String category, Double maxPoints) {
+        super(question, correctAnswer, category, maxPoints);
         this.correctAnswer = correctAnswer;
         this.answerOrdered = order;
-        this.maxPoints = maxPoints;
     }
 
     public void setQuestion(String question) {
         setRawQuestion(question);
+    }
+
+    @Override
+    public void setMaxPoints(Double maxPoints) {
+        setRawMaxPoints(maxPoints);
+    }
+
+    @Override
+    public Double getMaxPoints() {
+        return getRawMaxPoints();
     }
 
     @Override
@@ -104,7 +112,7 @@ public class ResponseQuestion extends Question {
                 ", userAnswer='" + getUserAnswer() + '\'' +
                 ", result=" + getResult() +
                 ", category='" + getCategory() + '\'' +
-                ", maxPoints=" + maxPoints +
+                ", maxPoints=" + getMaxPoints() +
                 ", ordered=" + answerOrdered +
                 '}';
     }
