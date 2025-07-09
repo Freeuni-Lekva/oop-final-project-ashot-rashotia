@@ -65,7 +65,7 @@ public class Announcement {
         if (author != null) {
             return author.getUsername();
         }else {
-            return "This user got Account deleted , or got banned";
+            throw new IllegalStateException("Author is not set");
         }
     }
 }
