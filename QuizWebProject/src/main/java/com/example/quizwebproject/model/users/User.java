@@ -128,7 +128,7 @@ public class User {
     // TODO : ================== IMPLEMENT METHODS ======================
 
     public QuizResult getBestScore(Quiz quiz) {
-        // TODO : MUST WRITE COMPARATOR FOR QUIZRESULT  CLASS ALSO FIX BUG: NULL CHECK FOR VIEW
+        // TODO : MUST WRITE QUIZ_RESULT_COMPARATOR FOR QUIZRESULT  CLASS ALSO FIX BUG: NULL CHECK FOR VIEW
         return userHistory.get(0);
     }
 
