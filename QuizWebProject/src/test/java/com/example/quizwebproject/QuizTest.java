@@ -24,6 +24,8 @@ public class QuizTest {
     private QuizRepo quizRepo;
 
     private Quiz quiz;
+    private Question q1;
+    private Question q2;
 
     @BeforeEach
     void setUp() {
@@ -34,7 +36,7 @@ public class QuizTest {
 
         List<String> correctAnswers = new ArrayList<>();
         correctAnswers.add("Tbilisi");
-        Question q1 = new TestQuestion(
+        q1 = new TestQuestion(
                 "What is the capital of Georgia?",
                 correctAnswers,
                 "Geography",
@@ -44,7 +46,7 @@ public class QuizTest {
 
         correctAnswers.remove(0);
         correctAnswers.add("4");
-        Question q2 = new TestQuestion(
+        q2 = new TestQuestion(
                 "What is 2+2 equal to?",
                 correctAnswers,
                 "Maths",
@@ -69,12 +71,12 @@ public class QuizTest {
 
     @Test
     public void testQuizDescription(){
-        String newDescription = "Easy";
+        String newDescription = "Test Quiz";
         assertNotEquals(newDescription, quiz.getDescription());
-        assertEquals("Difficult", quiz.getDescription());
+        assertEquals("Quiz Test", quiz.getDescription());
         quiz.setDescription(newDescription);
         assertEquals(newDescription, quiz.getDescription());
-        assertNotEquals("Difficult", quiz.getDescription());
+        assertNotEquals("Quiz Test", quiz.getDescription());
     }
 
     @Test
@@ -93,6 +95,33 @@ public class QuizTest {
         assertEquals("4", dummy.get(1).getCorrectAnswers().get(0));
         assertEquals("Maths", dummy.get(1).getCategory());
         assertEquals("What is 2+2 equal to?", dummy.get(1).getQuestion());
+    }
+
+    @Test
+    public void testQuizSetRemoveQuestions(){
+        quiz.removeQuestion(q1);
+        assertEquals(1, quiz.getQuestions().size());
+        quiz.removeIndexQuestion(0);
+        assertEquals(0, quiz.getQuestions().size());
+        quiz.insertQuestion(q1,0);
+        assertEquals(1, quiz.getQuestions().size());
+        quiz.insertQuestion(q2,1);
+        assertEquals(2, quiz.getQuestions().size());
+        quiz.addQuestion(q1);
+        assertEquals(3, quiz.getQuestions().size());
+    }
+
+    @Test
+    public void testBasic(){
+        assertEquals("ika", quiz.getAuthor().getUsername());
+        assertEquals("cuxo", quiz.getAuthor().getPassword());
+        assertEquals("Difficult", quiz.getType());
+        quiz.setType("Easy");
+        assertEquals("Easy", quiz.getType());
+        assertFalse(quiz.isPracticeMode());
+        assertFalse(quiz.isMulPages());
+        assertFalse(quiz.isQuickResults());
+        assertEquals(0, quiz.getHistory().size());
     }
 
 }
