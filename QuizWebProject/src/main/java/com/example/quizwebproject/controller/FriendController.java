@@ -2,9 +2,11 @@ package com.example.quizwebproject.controller;
 
 import com.example.quizwebproject.model.FriendRequest;
 import com.example.quizwebproject.model.users.User;
+import com.example.quizwebproject.model.users.activities.FriendActivity;
 import com.example.quizwebproject.service.FriendService;
 import com.example.quizwebproject.service.HomepageService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,5 +67,13 @@ public class FriendController {
         List<User> nonFriends = friendService.getNonFriendUsers(user.getId());
         model.addAttribute("nonFriends", nonFriends);
         return  "searchFriends";
+    }
+
+    @GetMapping("/showAllFriendsActs")
+    public String showAllFriendActs(HttpSession session, Model model) {
+        User user = (User)session.getAttribute("user");
+        List<FriendActivity> acts = homepageService.getRecentFriendActivities(user.getId(), Pageable.unpaged());
+        model.addAttribute("acts", acts);
+        return "showAllFriendActs";
     }
 }
