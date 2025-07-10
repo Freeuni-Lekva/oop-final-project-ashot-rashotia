@@ -1,6 +1,7 @@
 package com.example.quizwebproject.model.questions;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 
 import java.util.List;
 
@@ -13,12 +14,24 @@ public class GradedQuestion extends Question {
 
     public GradedQuestion() {}
 
-    public GradedQuestion(String question, String category) {
-        super(question, "", category);
+
+
+    public GradedQuestion(String question, String category, Double maxPoints) {
+        super(question, "", category, maxPoints);
         this.graded = false;
         this.score = 0.0;
         this.feedback = "";
         setRawUserAnswer("");
+    }
+
+    @Override
+    public void setMaxPoints(Double maxPoints) {
+        setRawMaxPoints(maxPoints);
+    }
+
+    @Override
+    public Double getMaxPoints() {
+        return getRawMaxPoints();
     }
 
     @Override
@@ -47,6 +60,7 @@ public class GradedQuestion extends Question {
     }
 
     @Override
+    @Lob
     public List<String> getCorrectAnswers() {
         return List.of();
     }

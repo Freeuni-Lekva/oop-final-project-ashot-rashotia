@@ -10,9 +10,19 @@ public class FillBlankQuestion extends Question {
 
     public FillBlankQuestion() {}
 
-    public FillBlankQuestion(String question, String category, String correctAnswer) {
-        super(question, correctAnswer, category);
+    public FillBlankQuestion(String question, String category, String correctAnswer, Double maxPoints) {
+        super(question, correctAnswer, category, maxPoints);
         setRawUserAnswer("");
+    }
+
+    @Override
+    public Double getMaxPoints(){
+        return getRawMaxPoints();
+    }
+
+    @Override
+    public void setMaxPoints(Double maxPoints){
+        setRawMaxPoints(maxPoints);
     }
 
     @Override

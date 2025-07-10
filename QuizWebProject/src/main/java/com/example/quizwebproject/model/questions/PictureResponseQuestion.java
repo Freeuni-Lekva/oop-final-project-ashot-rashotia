@@ -1,6 +1,7 @@
 package com.example.quizwebproject.model.questions;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 
 import java.util.List;
 
@@ -9,15 +10,13 @@ public class PictureResponseQuestion extends Question {
 
     private String imageUrl;
     private String correctAnswer;
-    private int maxPoints;
 
     public PictureResponseQuestion() {}
 
-    public PictureResponseQuestion(String question, String correctAnswer, String imageUrl, String category, int maxPoints) {
-        super(question, correctAnswer, category);
+    public PictureResponseQuestion(String question, String correctAnswer, String imageUrl, String category, Double maxPoints) {
+        super(question, correctAnswer, category, maxPoints);
         this.correctAnswer = correctAnswer;
         this.imageUrl = imageUrl;
-        this.maxPoints = maxPoints;
         setRawUserAnswer("");
     }
 
@@ -45,6 +44,16 @@ public class PictureResponseQuestion extends Question {
     }
 
     @Override
+    public void setMaxPoints(Double maxPoints) {
+        setRawMaxPoints(maxPoints);
+    }
+
+    @Override
+    public Double getMaxPoints() {
+        return getRawMaxPoints();
+    }
+
+    @Override
     public void setUserAnswer(String userAnswer) {
         setRawUserAnswer(userAnswer);
     }
@@ -65,6 +74,7 @@ public class PictureResponseQuestion extends Question {
     }
 
     @Override
+    @Lob
     public List<String> getCorrectAnswers() {
         return List.of(correctAnswer);
     }
@@ -90,7 +100,7 @@ public class PictureResponseQuestion extends Question {
                 ", userAnswer='" + getUserAnswer() + '\'' +
                 ", result=" + getResult() +
                 ", category='" + getCategory() + '\'' +
-                ", maxPoints=" + maxPoints +
+                ", maxPoints=" + getMaxPoints() +
                 '}';
     }
 }

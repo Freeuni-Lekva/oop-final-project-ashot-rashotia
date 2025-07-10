@@ -1,6 +1,5 @@
 package com.example.quizwebproject.repos;
 
-
 import com.example.quizwebproject.model.quizes.QuizResult;
 import com.example.quizwebproject.model.users.Challenge;
 import com.example.quizwebproject.model.users.User;
@@ -23,11 +22,11 @@ public interface UserRepo extends JpaRepository<User, Long> {
     User findByUsername(String username);
 
     @Query("SELECT qr FROM QuizResult qr WHERE qr.resultDate > :cutoff AND qr.user.id = :userId")
-    Page<QuizResult> getRecentUserQuizs(@Param("cutoff") LocalDateTime cutoff,@Param("userId") Long userId,
+    Page<QuizResult> getRecentUserQuizs(@Param("cutoff") LocalDateTime cutoff, @Param("userId") Long userId,
                                         Pageable pageable);
 
     @Query("SELECT chals FROM Challenge chals WHERE chals.receiver.id = :userId")
-    List<Challenge> getRecentChallenges(@Param("userId")Long userId, Pageable pageable);
+    List<Challenge> getRecentChallenges(@Param("userId") Long userId, Pageable pageable);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT u FROM User u WHERE u.id = :userId")
@@ -36,4 +35,3 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @Query("SELECT a FROM User u JOIN u.achis a WHERE u.id = :userId")
     Page<Achievements> findUserAchievements(@Param("userId") Long userId, Pageable pageable);
 }
-
