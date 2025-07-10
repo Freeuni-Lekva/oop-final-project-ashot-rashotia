@@ -1,4 +1,3 @@
-// File: com/example/quizwebproject/controller/HomepageController.java
 package com.example.quizwebproject.controller;
 
 import com.example.quizwebproject.DTOs.AnnouncementDTO;
