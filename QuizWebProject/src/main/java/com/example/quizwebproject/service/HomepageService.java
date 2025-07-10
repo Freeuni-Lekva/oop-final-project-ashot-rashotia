@@ -102,4 +102,9 @@ public class HomepageService {
                 announcement.getAuthorName()
         );
     }
+
+    public boolean validUser(User user) {
+        List<User> allUser = userRepo.findAll();
+        return !allUser.contains(user);
+    }
 }
