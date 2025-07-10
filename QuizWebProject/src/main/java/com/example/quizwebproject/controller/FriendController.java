@@ -35,4 +35,10 @@ public class FriendController {
         }
         return "redirect:/user/"+receiverId;
     }
+
+    @PostMapping("friend/accept")
+    public String acceptFriendRequest(@RequestParam("requestId") Long reqId) {
+        friendService.acceptFriendRequest(reqId);
+        return "redirect:/homepage";
+    }
 }
