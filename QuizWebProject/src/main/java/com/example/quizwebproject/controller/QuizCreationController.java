@@ -6,7 +6,9 @@ import com.example.quizwebproject.model.users.User;
 import com.example.quizwebproject.service.QuizCreationService;
 import com.example.quizwebproject.service.QuizService;
 import jakarta.servlet.http.HttpSession;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,6 +63,7 @@ public class QuizCreationController {
     }
 
     @PostMapping("/editQuiz/{id}/question/{index}")
+    @Transactional
     public String editQuiz(@PathVariable Long id,
                            @PathVariable int index,
                            @RequestParam("questionText") String question,
@@ -70,14 +73,13 @@ public class QuizCreationController {
                            @RequestParam("category") String category,
                            @RequestParam("maxPoints") Double maxPoints,
                            @RequestParam(value = "ordered", required = false, defaultValue = "false") boolean order,
-                           @RequestParam(value = "min", required = false, defaultValue = "-2147483648") int min, // minimum integer value
-                           @RequestParam(value = "max", required = false, defaultValue = "2147483647") int max, // maximum integer value
-                           @RequestParam(value = "leftItems", required = false, defaultValue = "null") List<String> leftItems,
-                           @RequestParam(value = "rightItems", required = false, defaultValue = "null") List<String> rightItems,
-                           @RequestParam(value = "correctMatches", required = false, defaultValue = "null") List<String> correctMatches,
-                           @RequestParam(value = "correctAnswers", required = false, defaultValue = "null") List<String> correctAnswers,
-                           @RequestParam(value = "options", required = false, defaultValue = "null") List<String> options,
-                           @RequestParam(value = "correctAnswer", required = false, defaultValue = "") String correctAnswer,
+                           @RequestParam(value = "min", required = false) int min, // minimum integer value
+                           @RequestParam(value = "max", required = false) int max, // maximum integer value
+                           @RequestParam(value = "leftItems", required = false) List<String> leftItems,
+                           @RequestParam(value = "rightItems", required = false) List<String> rightItems,
+                           @RequestParam(value = "correctMatches", required = false) List<String> correctMatches,
+                           @RequestParam(value = "correctAnswers", required = false) List<String> correctAnswers,
+                           @RequestParam(value = "options", required = false) List<String> options,
                            @RequestParam(value = "imageURL", required = false, defaultValue = "") String imageURL,
                            Model model) {
 
@@ -155,7 +157,7 @@ public class QuizCreationController {
                 }
                 break;
             case "PictureResponseQuestion":
-                q = new PictureResponseQuestion(question, correctAnswer, imageURL, category, maxPoints);
+                q = new PictureResponseQuestion(question, answer, imageURL, category, maxPoints);
                 if(index==quiz.getQuestions().size()){
                     quizCreationService.addNewQuestionToQuiz(id, q);
                 }else{

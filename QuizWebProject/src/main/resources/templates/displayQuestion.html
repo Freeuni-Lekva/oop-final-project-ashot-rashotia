@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title th:text="'Question ' + (${index} + 1) + ' of ' + ${quiz.description}">Question Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 2rem;
+    }
+
+    h2 {
+      border-bottom: 2px solid #4CAF50;
+      padding-bottom: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    p {
+      margin: 1rem 0;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-right: 1rem;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<!-- QUICK RESULTS: Submit immediately -->
+<form th:if="${quiz.quickResults}"
+      th:action="@{/quiz/{id}/question/{index}/immidiateResult(id=${quiz.id}, index=${index})}"
+      method="post">
+
+  <p th:text="'Quiz ID: ' + ${quiz.id}"></p>
+
+  <!-- quiz header -->
+  <div th:replace="~{fragments :: quizHeader(
+        ${quiz.description},
+        ${quiz.type},
+        ${quiz.author != null ? quiz.author.username : 'Unknown'}
+  )}"></div>
+
+  <h2 th:text="'Question ' + (${index} + 1)"></h2>
+
+  <!-- actual question input using fragments/questions -->
+  <div th:replace="~{fragments/questions :: questionOptions(${question})}"></div>
+
+  <button type="submit">Submit Answer</button>
+</form>
+
+<!-- MULTI-PAGE MODE WITHOUT QUICK RESULTS -->
+<form th:if="${!quiz.quickResults}"
+      th:action="@{/quiz/{id}/question/{index}/mulPages(id=${quiz.id}, index=${index})}"
+      method="post">
+
+  <p th:text="'Quiz ID: ' + ${quiz.id}"></p>
+
+  <!-- quiz header -->
+  <div th:replace="~{fragments :: quizHeader(
+        ${quiz.description},
+        ${quiz.type},
+        ${quiz.author != null ? quiz.author.username : 'Unknown'}
+  )}"></div>
+
+  <h2 th:text="'Question ' + (${index} + 1)"></h2>
+
+  <!-- actual question input using fragments/questions -->
+  <div th:replace="~{fragments/questions :: questionOptions(${question})}"></div>
+
+  <!-- direction flag for controller to track navigation -->
+  <input type="hidden" name="wentForward" id="wentForward" value="true"/>
+
+  <div>
+    <!-- Previous button -->
+    <button th:if="${hasPrevious}"
+            type="submit"
+            onclick="document.getElementById('wentForward').value='false'">
+      Previous
+    </button>
+
+    <!-- Next button -->
+    <button th:if="${hasNext}"
+            type="submit"
+            onclick="document.getElementById('wentForward').value='true'">
+      Next
+    </button>
+
+    <!-- Submit button for final question -->
+    <button th:if="${!hasNext}"
+            type="submit"
+            th:formaction="@{/quiz/{id}/question/{index}/mulPages/finalResult(id=${quiz.id}, index=${index})}">
+      Submit Quiz
+    </button>
+  </div>
+</form>
+
+</body>
+</html>

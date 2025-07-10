@@ -25,7 +25,6 @@ public class UserService {
 
 
     // me davamate eseni chatshi mchirdeboda
-
     public void addUserToChat(@NotNull Long chatId, @NotNull Long userId) {
         User user = userRepo.findById(userId).orElse(null);
         if(user == null) throw new RuntimeException("User not found");
