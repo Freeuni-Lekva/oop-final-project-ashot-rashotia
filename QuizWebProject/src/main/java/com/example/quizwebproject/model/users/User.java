@@ -1,5 +1,6 @@
 package com.example.quizwebproject.model.users;
 
+import com.example.quizwebproject.model.FriendRequest;
 import com.example.quizwebproject.model.quizes.Quiz;
 import com.example.quizwebproject.model.quizes.QuizResult;
 import com.example.quizwebproject.model.users.achievements.Achievements;
