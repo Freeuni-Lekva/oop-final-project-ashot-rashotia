@@ -47,4 +47,11 @@ public class FriendController {
         friendService.rejectFriendRequest(reqId);
         return "redirect:/homepage";
     }
+
+    @PostMapping("/removeFriend")
+    public String removeFriend(@RequestParam("friendId") Long friendId, HttpSession session) {
+        User remover = (User) session.getAttribute("user");
+        friendService.endFriendship(remover.getId(), friendId);
+        return "redirect:/homepage";
+    }
 }
