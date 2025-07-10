@@ -1,9 +1,9 @@
-package com.example.model.users;
+package com.example.quizwebproject.model.users;
 
-import com.example.model.quizes.Quiz;
-import com.example.model.quizes.QuizResult;
-import com.example.model.users.achievements.Achievements;
-import com.example.model.users.chat.Chat;
+import com.example.quizwebproject.model.quizes.Quiz;
+import com.example.quizwebproject.model.quizes.QuizResult;
+import com.example.quizwebproject.model.users.achievements.Achievements;
+import com.example.quizwebproject.model.users.chat.Chat;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
