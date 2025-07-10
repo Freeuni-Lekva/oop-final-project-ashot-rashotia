@@ -1,5 +1,6 @@
 package com.example.quizwebproject.repos;
 
+import com.example.quizwebproject.model.users.FriendRequest;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
