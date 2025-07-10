@@ -13,14 +13,12 @@ public class MultiSelectQuestion extends Question {
     @Lob
     private String options;
 
-    private int maxPoints;
-
     public MultiSelectQuestion() {}
 
-    public MultiSelectQuestion(String question, List<String> options, List<String> correctAnswers, String category, int maxPoints) {
-        super(question, String.join(",", correctAnswers), category);
+
+    public MultiSelectQuestion(String question, List<String> options, List<String> correctAnswers, String category, Double maxPoints) {
+        super(question, String.join(",", correctAnswers), category, maxPoints);
         this.options = String.join(",", options);
-        this.maxPoints = maxPoints;
         setRawUserAnswer("");
     }
 
@@ -33,6 +31,16 @@ public class MultiSelectQuestion extends Question {
 
     public void setOptions(List<String> options) {
         this.options = String.join(",", options);
+    }
+
+    @Override
+    public void setMaxPoints(Double maxPoints) {
+        setRawMaxPoints(maxPoints);
+    }
+
+    @Override
+    public Double getMaxPoints() {
+        return getRawMaxPoints();
     }
 
     @Override
@@ -109,7 +117,7 @@ public class MultiSelectQuestion extends Question {
                 ", userAnswers=" + getUserAnswers() +
                 ", result=" + getResult() +
                 ", category='" + getCategory() + '\'' +
-                ", maxPoints=" + maxPoints +
+                ", maxPoints=" + getMaxPoints() +
                 '}';
     }
 }

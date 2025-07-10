@@ -19,9 +19,8 @@ public class MatchingQuestion extends Question {
     @Lob
     private String correctMatches;
 
-    private int maxPoints;
-
     public MatchingQuestion() {}
+
 
     public MatchingQuestion(
             String question,
@@ -29,13 +28,12 @@ public class MatchingQuestion extends Question {
             List<String> rightItems,
             List<String> correctMatches,
             String category,
-            int maxPoints) {
+            Double maxPoints) {
 
-        super(question, String.join(",", correctMatches), category); // store correctMatches in base
+        super(question, String.join(",", correctMatches), category, maxPoints); // store correctMatches in base
         this.leftItems = String.join(",", leftItems);
         this.rightItems = String.join(",", rightItems);
         this.correctMatches = String.join(",", correctMatches);
-        this.maxPoints = maxPoints;
         setRawUserAnswer("");
     }
 
@@ -91,6 +89,16 @@ public class MatchingQuestion extends Question {
     }
 
     @Override
+    public void setMaxPoints(Double maxPoints) {
+        setRawMaxPoints(maxPoints);
+    }
+
+    @Override
+    public Double getMaxPoints() {
+        return getRawMaxPoints();
+    }
+
+    @Override
     public String getQuestion() {
         return getRawQuestion();
     }
@@ -126,7 +134,7 @@ public class MatchingQuestion extends Question {
                 ", userMatches=" + getUserMatches() +
                 ", result=" + getResult() +
                 ", category='" + getCategory() + '\'' +
-                ", maxPoints=" + maxPoints +
+                ", maxPoints=" + getMaxPoints() +
                 '}';
     }
 

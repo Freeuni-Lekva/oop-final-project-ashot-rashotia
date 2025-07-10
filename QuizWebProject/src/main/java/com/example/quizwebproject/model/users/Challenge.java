@@ -1,7 +1,7 @@
 package com.example.quizwebproject.model.users;
 
-import com.example.model.quizes.Quiz;
-import com.example.model.quizes.QuizResult;
+import com.example.quizwebproject.model.quizes.Quiz;
+import com.example.quizwebproject.model.quizes.QuizResult;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 

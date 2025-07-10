@@ -15,14 +15,11 @@ public class TestQuestion extends Question {
     @Lob
     private String savAnswers;
 
-    private int maxPoints;
-
     public TestQuestion() {}
 
-    public TestQuestion(String question, List<String> correctAnswers, String category, int maxPoints, @NotNull String savAnswers) {
-        super(question, String.join(",", correctAnswers), category);
+    public TestQuestion(String question, List<String> correctAnswers, String category, Double maxPoints, @NotNull String savAnswers) {
+        super(question, String.join(",", correctAnswers), category, maxPoints);
         this.savAnswers = savAnswers.trim();
-        this.maxPoints = maxPoints;
         setRawUserAnswer(""); // initial blank answer
     }
 
@@ -61,6 +58,16 @@ public class TestQuestion extends Question {
 
     public void setCorrectAnswers(List<String> correctAnswers) {
         setRawCorrectAnswers(String.join(",", correctAnswers));
+    }
+
+    @Override
+    public void setMaxPoints(Double maxPoints) {
+        setRawMaxPoints(maxPoints);
+    }
+
+    @Override
+    public Double getMaxPoints() {
+        return getRawMaxPoints();
     }
 
     @Override
@@ -122,7 +129,7 @@ public class TestQuestion extends Question {
                 ", savAnswers=" + getSavAnswers() +
                 ", result=" + getResult() +
                 ", category='" + getCategory() + '\'' +
-                ", maxPoints=" + maxPoints +
+                ", maxPoints=" + getMaxPoints() +
                 '}';
     }
 }

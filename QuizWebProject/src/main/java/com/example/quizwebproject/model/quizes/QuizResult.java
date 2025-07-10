@@ -4,6 +4,7 @@ import com.example.quizwebproject.model.users.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 @Entity
 public class QuizResult {
@@ -21,6 +22,12 @@ public class QuizResult {
     private Quiz quiz;
 
     private LocalDateTime resultDate;
+
+    public static final Comparator<QuizResult> QUIZ_RESULT_COMPARATOR =
+            Comparator.comparingDouble(QuizResult::getPoints).reversed() // Higher points first
+                    .thenComparingLong(QuizResult::getTime)             // Shorter time better
+                    .thenComparing(QuizResult::getResultDate).reversed(); // More recent better
+
 
     public QuizResult() {}
 
@@ -67,4 +74,5 @@ public class QuizResult {
     public void setUser(User user) {
         this.user = user;
     }
+
 }

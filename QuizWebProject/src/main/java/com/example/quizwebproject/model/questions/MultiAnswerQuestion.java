@@ -1,6 +1,7 @@
 package com.example.quizwebproject.model.questions;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,14 +11,12 @@ import java.util.List;
 public class MultiAnswerQuestion extends Question {
 
     private boolean ordered;
-    private int maxPoints;
 
     public MultiAnswerQuestion() {}
 
-    public MultiAnswerQuestion(String question, List<String> correctAnswers, String category, boolean ordered, int maxPoints) {
-        super(question, String.join(",", correctAnswers), category);
+    public MultiAnswerQuestion(String question, List<String> correctAnswers, String category, boolean ordered, Double maxPoints) {
+        super(question, String.join(",", correctAnswers), category, maxPoints);
         this.ordered = ordered;
-        this.maxPoints = maxPoints;
         setRawUserAnswer("");
     }
 
@@ -27,6 +26,16 @@ public class MultiAnswerQuestion extends Question {
 
     public void setOrdered(boolean ordered) {
         this.ordered = ordered;
+    }
+
+    @Override
+    public void setMaxPoints(Double maxPoints) {
+        setRawMaxPoints(maxPoints);
+    }
+
+    @Override
+    public Double getMaxPoints() {
+        return getRawMaxPoints();
     }
 
     @Override
@@ -59,6 +68,7 @@ public class MultiAnswerQuestion extends Question {
     }
 
     @Override
+    @Lob
     public List<String> getCorrectAnswers() {
         String raw = getRawCorrectAnswers();
         if (raw == null || raw.isEmpty()) return new ArrayList<>();
@@ -71,6 +81,7 @@ public class MultiAnswerQuestion extends Question {
         setRawCorrectAnswers(String.join(",", correctAnswers));
     }
 
+    @Lob
     public List<String> getUserAnswers() {
         String raw = getRawUserAnswer();
         if (raw == null || raw.isEmpty()) return new ArrayList<>();
@@ -117,7 +128,7 @@ public class MultiAnswerQuestion extends Question {
                 ", result=" + getResult() +
                 ", category='" + getCategory() + '\'' +
                 ", ordered=" + ordered +
-                ", maxPoints=" + maxPoints +
+                ", maxPoints=" + getMaxPoints() +
                 '}';
     }
 }
