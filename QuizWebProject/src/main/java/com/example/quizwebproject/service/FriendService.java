@@ -1,6 +1,5 @@
 package com.example.quizwebproject.service;
 
-import com.example.quizwebproject.model.FriendRequest;
 import com.example.quizwebproject.model.users.User;
 import com.example.quizwebproject.repos.FriendRequestRepo;
 import com.example.quizwebproject.repos.UserRepo;

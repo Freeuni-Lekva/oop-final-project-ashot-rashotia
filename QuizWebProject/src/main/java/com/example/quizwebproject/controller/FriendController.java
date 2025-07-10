@@ -1,6 +1,5 @@
 package com.example.quizwebproject.controller;
 
-import com.example.quizwebproject.model.FriendRequest;
 import com.example.quizwebproject.model.users.User;
 import com.example.quizwebproject.model.users.activities.FriendActivity;
 import com.example.quizwebproject.service.FriendService;
