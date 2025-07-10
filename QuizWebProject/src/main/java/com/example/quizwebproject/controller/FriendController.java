@@ -41,4 +41,10 @@ public class FriendController {
         friendService.acceptFriendRequest(reqId);
         return "redirect:/homepage";
     }
+
+    @PostMapping("friend/reject")
+    public String rejectFriendRequest(@RequestParam("requestId") Long reqId) {
+        friendService.rejectFriendRequest(reqId);
+        return "redirect:/homepage";
+    }
 }
