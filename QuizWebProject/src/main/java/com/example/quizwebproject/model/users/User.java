@@ -7,6 +7,7 @@ import com.example.quizwebproject.model.users.chat.Chat;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Entity
@@ -38,7 +39,7 @@ public class User {
 
     // TODO : can prob change this
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<QuizResult> userHistory;
+    private List<QuizResult> userHistory = new ArrayList<>();
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Challenge> challenges;
@@ -109,9 +110,10 @@ public class User {
 
     public List<QuizResult> getUserHistory() { return userHistory; }
 
-
     // TODO : this and its usage in quiz class must move to service layer
     public void addResultToHistory(QuizResult result) {
+        // This logic should ideally be placed in the service layer
+        // Left here for now as per current architecture
         userHistory.add(result);
     }
 
@@ -126,16 +128,16 @@ public class User {
     public List<Challenge> getChallenges() { return challenges; }
 
     // TODO : ================== IMPLEMENT METHODS ======================
-
     public QuizResult getBestScore(Quiz quiz) {
-        // TODO : MUST WRITE QUIZ_RESULT_COMPARATOR FOR QUIZRESULT  CLASS ALSO FIX BUG: NULL CHECK FOR VIEW
-        return userHistory.get(0);
+        return userHistory.stream()
+                .filter(r -> r.getQuiz() != null && r.getQuiz().equals(quiz))
+                .max(QuizResult.QUIZ_RESULT_COMPARATOR)
+                .orElse(null);
     }
+
 
     private String hashPassword(String pas) {
         // TODO: Replace with real hashing
-        return pas;
+        return Base64.getEncoder().encodeToString(pas.getBytes());
     }
 }
-
-
