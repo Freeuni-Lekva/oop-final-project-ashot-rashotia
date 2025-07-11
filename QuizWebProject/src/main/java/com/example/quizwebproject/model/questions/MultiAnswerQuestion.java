@@ -29,6 +29,9 @@ public class MultiAnswerQuestion extends Question {
     }
 
     @Override
+    public String getQuestionType() { return "MultiAnswerQuestion"; }
+
+    @Override
     public void setMaxPoints(Double maxPoints) {
         setRawMaxPoints(maxPoints);
     }

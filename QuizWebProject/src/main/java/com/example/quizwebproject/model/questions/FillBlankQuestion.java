@@ -16,6 +16,9 @@ public class FillBlankQuestion extends Question {
     }
 
     @Override
+    public String getQuestionType() { return "FillBlankQuestion"; }
+
+    @Override
     public Double getMaxPoints(){
         return getRawMaxPoints();
     }

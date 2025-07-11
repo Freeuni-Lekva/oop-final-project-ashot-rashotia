@@ -63,6 +63,8 @@ public class User {
 
     public List<Achievements> getAchievements() { return achis; }
 
+    public boolean isAdmin() { return admin; }
+
     public void promote() {
         this.admin = true;
     }
@@ -127,7 +129,6 @@ public class User {
 
     public List<Challenge> getChallenges() { return challenges; }
 
-    // TODO : ================== IMPLEMENT METHODS ======================
     public QuizResult getBestScore(Quiz quiz) {
         return userHistory.stream()
                 .filter(r -> r.getQuiz() != null && r.getQuiz().equals(quiz))
@@ -137,7 +138,6 @@ public class User {
 
 
     private String hashPassword(String pas) {
-        // TODO: Replace with real hashing
         return Base64.getEncoder().encodeToString(pas.getBytes());
     }
 }

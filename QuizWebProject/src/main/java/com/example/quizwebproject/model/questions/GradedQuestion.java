@@ -25,6 +25,9 @@ public class GradedQuestion extends Question {
     }
 
     @Override
+    public String getQuestionType() { return "GradedQuestion"; }
+
+    @Override
     public void setMaxPoints(Double maxPoints) {
         setRawMaxPoints(maxPoints);
     }

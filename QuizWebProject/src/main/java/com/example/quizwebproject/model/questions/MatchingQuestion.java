@@ -37,6 +37,9 @@ public class MatchingQuestion extends Question {
         setRawUserAnswer("");
     }
 
+    @Override
+    public String getQuestionType() { return "MatchingQuestion"; }
+
     public List<String> getLeftItems() {
         return parseList(leftItems);
     }

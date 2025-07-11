@@ -1,8 +1,6 @@
 package com.example.quizwebproject.controller;
 
-import com.example.quizwebproject.DTOs.AnnouncementDTO;
 import com.example.quizwebproject.model.users.User;
-import com.example.quizwebproject.model.users.admin.Announcement;
 import com.example.quizwebproject.service.HomepageService;
 import com.example.quizwebproject.service.FriendService;
 import com.example.quizwebproject.service.UserPageService;
@@ -59,10 +57,10 @@ public class HomepageController {
             List<User> friends = friendService.getFriendsList(user.getId());
             model.addAttribute("friends", friends);
         } catch (Exception e) {
-            return "login";
+            return "redirect:/login";
         }
 
-        return "homepage";
+        return "infoPages/homepage";
     }
 
     @GetMapping("/createQuiz")
@@ -72,8 +70,7 @@ public class HomepageController {
 
     @GetMapping("/allAnnounces")
     public String displayAllAnnouncements(Model model) {
-        List<AnnouncementDTO> announcements = homepageService.getRecentAnnouncements(Pageable.unpaged());
-        model.addAttribute("announcements", announcements);
-        return "allAnnouncements";
+        model.addAttribute("announcements", homepageService.getRecentAnnouncements(Pageable.unpaged()));
+        return "infoPages/allAnnouncements";
     }
 }

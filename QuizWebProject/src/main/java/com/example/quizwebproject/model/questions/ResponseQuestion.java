@@ -24,6 +24,9 @@ public class ResponseQuestion extends Question {
     }
 
     @Override
+    public String getQuestionType() { return "ResponseQuestion"; }
+
+    @Override
     public void setMaxPoints(Double maxPoints) {
         setRawMaxPoints(maxPoints);
     }
@@ -58,6 +61,8 @@ public class ResponseQuestion extends Question {
     public List<String> getCorrectAnswers() {
         return List.of(correctAnswer);
     }
+
+    public boolean isAnswerOrdered() { return answerOrdered; }
 
     @Override
     public double getResult() {

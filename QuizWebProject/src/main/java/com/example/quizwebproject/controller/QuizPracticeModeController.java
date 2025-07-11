@@ -53,7 +53,7 @@ public class QuizPracticeModeController {
         Quiz quiz = (Quiz) session.getAttribute("quiz");
 
         if (quiz == null || quiz.getQuestions() == null || index < 0 || index > quiz.getQuestions().size()) {
-            return "quizNotFound";
+            return "errorPages/quizNotFound";
         }
 
         if(index>=quiz.getQuestions().size()) index=0;
