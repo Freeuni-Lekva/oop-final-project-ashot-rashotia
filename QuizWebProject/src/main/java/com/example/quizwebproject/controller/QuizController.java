@@ -39,6 +39,9 @@ public class QuizController {
             session.setAttribute("quiz", quiz);
 
             if (quiz != null && quiz.isMulPages()) {
+                session.setAttribute("quiz", quiz);
+                Double x = 0D;
+                session.setAttribute("resultSoFar", x);
                 return "redirect:/quiz/" + id.toString() + "/question/" + "0";
             }else if(quiz != null && !quiz.isMulPages()){
                 return "displayQuizSinglePage";
@@ -62,7 +65,8 @@ public class QuizController {
     public String mulPageQuestionAnswered(@PathVariable Long id, @PathVariable int index,
                                           HttpSession session,
                                           @RequestParam MultiValueMap<String, String> formData,
-                                          @RequestParam("wentForward") boolean forward) {
+                                          @RequestParam("wentForward") boolean forward,
+                                          @RequestParam(value = "submittedQuiz", required = false, defaultValue = "false") Boolean submitted) {
         List<String> userAnswers = new ArrayList<>();
         for (String key : formData.keySet()) {
             if (key.startsWith("answer_")) {
@@ -74,17 +78,38 @@ public class QuizController {
         for (String userAnswer : userAnswers) {
             answers.append(userAnswer).append(",");
         }
+
         Quiz quiz = (Quiz) session.getAttribute("quiz");
-        Question question=quiz.getQuestions().get(index);
-        if(!answers.toString().equals(",")) question.setUserAnswer(answers.toString());
-        if(forward) ++index;
+        Question question = quiz.getQuestions().get(index);
+
+        if (!answers.toString().equals(",")) {
+            question.setUserAnswer(answers.toString());
+
+            Double currentScore = (Double) session.getAttribute("resultSoFar");
+            if (currentScore == null) currentScore = 0D;
+            if (question.getUserAnswer() != null && !question.getUserAnswer().isEmpty()) {
+                double questionScore = question.getResult();
+                session.setAttribute("resultSoFar", currentScore + questionScore);
+            } else {
+                double updatedScore = quizService.calculateScore(quiz);
+                session.setAttribute("resultSoFar", updatedScore);
+            }
+        }
+
+        if(submitted != null && submitted) {
+            return "redirect:/quiz/mulPages/finalResult";
+        }
+
+        if (forward) ++index;
         else --index;
-        return "redirect:/quiz/" + id.toString() + "/question/" + index;
+
+        return "redirect:/quiz/" + id + "/question/" + index;
     }
 
-    @RequestMapping("/quiz/{id}/question/{index}/mulPages/finalResult")
-    public String getMultiplePagesFinalResult(@PathVariable Long id, @PathVariable int index,
-                                              HttpSession session, Model model){
+
+
+    @RequestMapping("/quiz/mulPages/finalResult")
+    public String getMultiplePagesFinalResult(HttpSession session, Model model){
         long curTime = System.currentTimeMillis();
         Long startTime = (Long) session.getAttribute("startTime");
         long elapsedTime = ((curTime - startTime) / 1000L);
@@ -92,14 +117,16 @@ public class QuizController {
         Quiz quiz = (Quiz) session.getAttribute("quiz");
         User user = (User) session.getAttribute("user");
 
-        double score = quizService.calculateScore(quiz);
-        QuizResult result = new QuizResult(elapsedTime, score, quiz, user);
+        Double score = (Double) session.getAttribute("resultSoFar");
+        if (score == null) score = 0D;
 
-        quizService.addNewResult(elapsedTime,score,quiz.getId(),user.getId());
+        QuizResult result = new QuizResult(elapsedTime, score, quiz, user);
+        quizService.addNewResult(elapsedTime, score, quiz.getId(), user.getId());
 
         model.addAttribute("quizResult", result);
         return "resultpage";
     }
+
 
     @RequestMapping("/quiz/{id}/question/{index}")
     public String question(@PathVariable Long id, @PathVariable Integer index, Model model) {
@@ -262,3 +289,5 @@ public class QuizController {
         return "allQuizzes";
     }
 }
+
+
