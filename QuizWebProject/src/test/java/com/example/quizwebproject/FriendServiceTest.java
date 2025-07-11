@@ -65,8 +65,8 @@ class FriendServiceTest {
         Mockito.when(userRepo.findWithLock(1L)).thenReturn(Optional.of(a));
         Mockito.when(userRepo.findWithLock(2L)).thenReturn(Optional.of(b));
         svc.acceptFriendRequest(9L);
-        assertThat(a.getFriends()).contains(b);
-        assertThat(b.getFriends()).contains(a);
+        assertThat(a.getFriends().stream().map(User::getId)).contains(b.getId());
+        assertThat(b.getFriends().stream().map(User::getId)).contains(a.getId());
         assertThat(fr.getResult()).isTrue();
     }
 

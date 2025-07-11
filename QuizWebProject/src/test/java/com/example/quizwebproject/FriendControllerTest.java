@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
-
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -109,8 +108,9 @@ public class FriendControllerTest {
     }
 
     @Test
-    public void testSearchFriends_addsNonFriendsToModel() throws Exception {
-        when(friendService.getNonFriendUsers(anyLong())).thenReturn(Collections.emptyList());
+    void testSearchFriends_addsNonFriendsToModel() throws Exception {
+        when(friendService.getNonFriendUsers(anyLong()))
+                .thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/searchFriends")
                         .sessionAttr("user", mockUser))
