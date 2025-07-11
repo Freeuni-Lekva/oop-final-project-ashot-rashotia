@@ -1,12 +1,17 @@
 package com.example.quizwebproject.controller;
 
+import com.example.quizwebproject.model.quizes.Quiz;
 import com.example.quizwebproject.model.users.User;
+import com.example.quizwebproject.service.QuizService;
+import com.example.quizwebproject.service.UserPageService;
 import com.example.quizwebproject.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -29,7 +34,9 @@ public class UserController {
         User user = new User(username, password);
 
         if(userService.isValidPass(user)) {
-            session.setAttribute("user", userService.getUser(username));
+            User realUser = userService.getUser(username);
+            session.setAttribute("user", realUser);
+            userService.checkAchivements(realUser.getId());
             return "redirect:/homepage";
         }else{
             return "errorPages/passwordOrUserIncorrect";

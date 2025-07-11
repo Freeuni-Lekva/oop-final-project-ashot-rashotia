@@ -57,6 +57,9 @@ public class QuizController {
             Double x = 0D;
             if(quiz.isQuickResults()) session.setAttribute("resultSoFar", x);
 
+            User user = (User) session.getAttribute("user");
+            userService.givePracticeMakesPerfectToUser(user.getId());
+
             return "redirect:/quiz/" + id + "/practiceMode/question/0";
         }
     }
