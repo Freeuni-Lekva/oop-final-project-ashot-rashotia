@@ -19,7 +19,7 @@
         }
 
         window.addEventListener("DOMContentLoaded", () => {
-            toggleFields(); // Show correct section on load
+            toggleFields();
             document.getElementById("questionType").addEventListener("change", toggleFields);
         });
     </script>
@@ -63,31 +63,32 @@
         <label for="questionType">Question Type:</label><br>
         <select id="questionType" name="questionType">
             <option value="TestQuestion"
-                    th:selected="${question != null and question.getClass().getSimpleName() == 'TestQuestion'}">
+                    th:selected="${question != null and question.questionType == 'TestQuestion'}">
                 TestQuestion
             </option>
             <option value="ResponseQuestion"
-                    th:selected="${question != null and question.getClass().getSimpleName() == 'ResponseQuestion'}">
+                    th:selected="${question != null and question.questionType == 'ResponseQuestion'}">
                 ResponseQuestion
             </option>
             <option value="FillBlankQuestion"
-                    th:selected="${question != null and question.getClass().getSimpleName() == 'FillBlankQuestion'}">
+                    th:selected="${question != null and question.questionType == 'FillBlankQuestion'}">
                 FillBlankQuestion
             </option>
+            <!-- add other question types here -->
         </select><br><br>
 
         <!-- Possible Answers (only for TestQuestion) -->
         <div id="possibleAnswersDiv" style="display:none;">
             <label for="possibleAnswers">Possible Answers:</label><br>
             <input type="text" id="possibleAnswers" name="possibleAnswers"
-                   th:value="${question != null and question.getClass().getSimpleName() == 'TestQuestion'} ? ${question.savAnswers} : ''"/><br><br>
+                   th:value="${question != null and question.questionType == 'TestQuestion'} ? ${question.savAnswers} : ''"/><br><br>
         </div>
 
         <!-- Ordered Checkbox (only for ResponseQuestion) -->
         <div id="orderedCheckboxDiv" style="display:none;">
             <label>
                 <input type="checkbox" id="ordered" name="ordered"
-                       th:checked="${question != null and question.getClass().getSimpleName() == 'ResponseQuestion' and question.answerOrdered}" />
+                       th:checked="${question != null and question.questionType == 'ResponseQuestion' and question.answerOrdered}" />
                 Ordered
             </label><br><br>
         </div>
@@ -113,7 +114,7 @@
 
     <!-- Info Section -->
     <div style="margin-top: 1rem;">
-        <p th:if="${!hasPrev and !hasNext and !newQuestion == false}">This is the only question.</p>
+        <p th:if="${!hasPrev and !hasNext and !newQuestion}">This is the only question.</p>
         <p th:if="${newQuestion}">Adding a new question.</p>
     </div>
 
@@ -128,9 +129,7 @@
     </div>
 
     <form th:if="${hasNext}"
-          th:action="@{/editQuiz/{id}/question/{index}/removeQuestion(id=${id}, index=${index})}"
-          method="post"
-          style="margin-top: 1rem;">
+          th:action="@{/editQuiz/{id}/question/{index}/removeQuestion(id=${id}, index=${index})}" method="post" style="margin-top: 1rem;">
         <button type="submit" style="color: red;">Delete This Question</button>
     </form>
 

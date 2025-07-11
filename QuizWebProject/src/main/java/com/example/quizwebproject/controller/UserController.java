@@ -32,7 +32,7 @@ public class UserController {
             session.setAttribute("user", userService.getUser(username));
             return "redirect:/homepage";
         }else{
-            return "passwordOrUserIncorrect";
+            return "errorPages/passwordOrUserIncorrect";
         }
     }
 
@@ -42,14 +42,13 @@ public class UserController {
     }
 
     @PostMapping("/signUp")
-    public String signUp(@RequestParam("name") String username, @RequestParam("password") String password,
-                         HttpSession session) {
+    public String signUp(@RequestParam("name") String username, @RequestParam("password") String password) {
         User user = new User(username, password);
         if(userService.userExists(user)) {
-            return "userExists";
+            return "errorPages/userExists";
         }else{
             userService.addNewUser(user);
-            return "/login";
+            return "login";
         }
     }
 }

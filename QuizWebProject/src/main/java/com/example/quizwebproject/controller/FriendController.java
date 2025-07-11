@@ -66,14 +66,14 @@ public class FriendController {
         User user = (User)session.getAttribute("user");
         List<User> nonFriends = friendService.getNonFriendUsers(user.getId());
         model.addAttribute("nonFriends", nonFriends);
-        return  "searchFriends";
+        return  "friendStuff/searchFriends";
     }
 
-    @GetMapping("/showAllFriendsActs")
+    @GetMapping("/showAllFriendActs")
     public String showAllFriendActs(HttpSession session, Model model) {
         User user = (User)session.getAttribute("user");
         List<FriendActivity> acts = homepageService.getRecentFriendActivities(user.getId(), Pageable.unpaged());
         model.addAttribute("acts", acts);
-        return "showAllFriendActs";
+        return "friendStuff/showAllFriendActs";
     }
 }

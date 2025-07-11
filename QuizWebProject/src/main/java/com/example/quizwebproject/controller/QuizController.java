@@ -43,7 +43,7 @@ public class QuizController {
             }else if(quiz != null && !quiz.isMulPages()){
                 return "displayQuizSinglePage";
             }
-            return "quizNotFound";
+            return "errorPages/quizNotFound";
         }else{
             Quiz quiz = quizService.getQuizById(id);
             ArrayList<Integer> correctCnt = new ArrayList<>(quiz.getQuestions().size());
@@ -106,7 +106,7 @@ public class QuizController {
         Quiz quiz = quizService.getQuizById(id);
 
         if (quiz == null || quiz.getQuestions() == null || index < 0 || index >= quiz.getQuestions().size()) {
-            return "quizNotFound";
+            return "errorPages/quizNotFound";
         }
 
         List<Question> questions = quiz.getQuestions();
@@ -159,7 +159,7 @@ public class QuizController {
         model.addAttribute("hasNext", index < questions.size() - 1);
         model.addAttribute("resultSoFar",x+y);
 
-        return "quickResults/displayImmidateResult";
+        return "displayImmidateResult";
     }
 
     @RequestMapping("/quiz/startQuiz/{id}")

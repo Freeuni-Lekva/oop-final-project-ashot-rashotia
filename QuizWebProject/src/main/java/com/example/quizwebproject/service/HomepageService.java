@@ -1,15 +1,11 @@
 package com.example.quizwebproject.service;
 
-import com.example.quizwebproject.DTOs.AnnouncementDTO;
 import com.example.quizwebproject.model.quizes.*;
 import com.example.quizwebproject.model.users.Challenge;
 import com.example.quizwebproject.model.users.User;
 import com.example.quizwebproject.model.users.activities.FriendActivity;
 import com.example.quizwebproject.model.users.admin.Announcement;
-import com.example.quizwebproject.repos.AnnouncementRepo;
-import com.example.quizwebproject.repos.FriendActivityRepo;
-import com.example.quizwebproject.repos.QuizRepo;
-import com.example.quizwebproject.repos.UserRepo;
+import com.example.quizwebproject.repos.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class HomepageService {
@@ -25,6 +20,8 @@ public class HomepageService {
     private final AnnouncementRepo announcementRepo;
     private final UserRepo userRepo;
     private final FriendActivityRepo fracRepo;
+    private final ChallengesRepo chalRepo;
+    private final QuizResultRepo qrRepo;
 
     private static final int POPULAR_QUIZ_LIMIT = 10;
     private static final int RECENT_QUIZ_LIMIT = 20;
@@ -35,23 +32,18 @@ public class HomepageService {
     private static final int RECENT_DAYS = 1;
 
     public HomepageService(QuizRepo quizRepo, AnnouncementRepo announcementRepo, UserRepo userRepo,
-                           FriendActivityRepo fracRepo) {
+                           FriendActivityRepo fracRepo, ChallengesRepo chalRepo, QuizResultRepo qrRepo) {
         this.quizRepo = quizRepo;
         this.announcementRepo = announcementRepo;
         this.userRepo = userRepo;
         this.fracRepo = fracRepo;
+        this.chalRepo = chalRepo;
+        this.qrRepo = qrRepo;
     }
 
-    public List<AnnouncementDTO> getRecentAnnouncements(Pageable pageable) {
-        LocalDateTime lastTenDays = LocalDateTime.now().minusDays(ANNOUNCEMENT_DAYS);
-        List<Announcement> announcements = this.announcementRepo
-                .getRecentTenDayAnnouncements(lastTenDays, pageable)
-                .getContent();
-        return announcements.stream().map(this::toDto).collect(Collectors.toList());
-    }
-
-    public List<AnnouncementDTO> getAllAnnouncements() {
-        return this.announcementRepo.findAll().stream().map(this::toDto).collect(Collectors.toList());
+    public List<Announcement> getRecentAnnouncements(Pageable pageable) {
+        LocalDateTime lastTenDays = LocalDateTime.now().minusDays(10);
+        return this.announcementRepo.getRecentTenDayAnnouncements(lastTenDays,pageable).getContent();
     }
 
     public List<Quiz> popularQuizs() {
@@ -65,7 +57,7 @@ public class HomepageService {
 
     public List<QuizResult> getUserRecentQuizTakes(Long userId) {
         LocalDateTime lastTenDays = LocalDateTime.now().minusDays(ANNOUNCEMENT_DAYS);
-        return this.userRepo.getRecentUserQuizs(lastTenDays, userId, PageRequest.of(0, USER_QUIZ_LIMIT)).getContent();
+        return this.qrRepo.getRecentUserQuizs(lastTenDays, userId, PageRequest.of(0, USER_QUIZ_LIMIT)).getContent();
     }
 
     public List<Quiz> getRecentQuizCreats(Long userId) {
@@ -74,7 +66,7 @@ public class HomepageService {
     }
 
     public List<Challenge> getRecentChallenges(Long userId) {
-        return this.userRepo.getRecentChallenges(userId, PageRequest.of(0, CHALLENGE_LIMIT));
+        return this.chalRepo.getChals(userId, PageRequest.of(0, CHALLENGE_LIMIT)).getContent();
     }
 
     public List<FriendActivity> getRecentFriendActivities(Long userId, Pageable pageable) {
@@ -91,16 +83,6 @@ public class HomepageService {
         }
 
         return friendsRecentActs;
-    }
-
-    private AnnouncementDTO toDto(Announcement announcement) {
-        return new AnnouncementDTO(
-                announcement.getId(),
-                announcement.getTitle(),
-                announcement.getContent(),
-                announcement.getDateTime(),
-                announcement.getAuthorName()
-        );
     }
 
     public boolean validUser(User user) {

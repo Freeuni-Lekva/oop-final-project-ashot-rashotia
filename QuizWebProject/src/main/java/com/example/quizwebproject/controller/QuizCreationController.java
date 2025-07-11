@@ -6,7 +6,6 @@ import com.example.quizwebproject.model.users.User;
 import com.example.quizwebproject.service.QuizCreationService;
 import com.example.quizwebproject.service.QuizService;
 import jakarta.servlet.http.HttpSession;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -72,9 +71,9 @@ public class QuizCreationController {
                            @RequestParam(value = "possibleAnswers", required = false, defaultValue = "") String posAnswers,
                            @RequestParam("category") String category,
                            @RequestParam("maxPoints") Double maxPoints,
-                           @RequestParam(value = "ordered", required = false, defaultValue = "false") boolean order,
-                           @RequestParam(value = "min", required = false) int min, // minimum integer value
-                           @RequestParam(value = "max", required = false) int max, // maximum integer value
+                           @RequestParam(value = "ordered", required = false, defaultValue = "false") Boolean order,
+                           @RequestParam(value = "min", required = false) Integer min, // minimum integer value
+                           @RequestParam(value = "max", required = false) Integer max, // maximum integer value
                            @RequestParam(value = "leftItems", required = false) List<String> leftItems,
                            @RequestParam(value = "rightItems", required = false) List<String> rightItems,
                            @RequestParam(value = "correctMatches", required = false) List<String> correctMatches,

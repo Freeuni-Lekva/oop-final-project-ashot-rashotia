@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/QuizWebProject/QuizWebProject.iml" filepath="$PROJECT_DIR$/QuizWebProject/QuizWebProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/oop-final-project-ashot-rashotia.iml" filepath="$PROJECT_DIR$/.idea/oop-final-project-ashot-rashotia.iml" />
     </modules>
   </component>

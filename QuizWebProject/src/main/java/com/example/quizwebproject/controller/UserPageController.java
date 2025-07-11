@@ -44,7 +44,7 @@ public class UserPageController {
     public String getUserQuizs(@PathVariable Long userId, Model model) {
         List<Quiz> userQuizs = upService.getUserQuizs(userId);
         model.addAttribute("userQuizs", userQuizs);
-        return "userQuizs";
+        return "infoPages/userQuizs";
     }
 
     @GetMapping("/user/{userId}/history")
