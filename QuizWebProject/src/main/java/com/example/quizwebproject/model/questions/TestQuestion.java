@@ -24,6 +24,9 @@ public class TestQuestion extends Question {
     }
 
     @Override
+    public String getQuestionType() { return "TestQuestion"; }
+
+    @Override
     public String getCategory() {
         return getRawCategory();
     }

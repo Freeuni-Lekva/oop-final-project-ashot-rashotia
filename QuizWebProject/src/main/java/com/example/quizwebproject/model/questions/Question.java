@@ -87,4 +87,5 @@ public abstract class Question {
     public abstract String getUserAnswer();
     public abstract String getCategory();
     public abstract void setCategory(String category);
+    public abstract String getQuestionType();
 }

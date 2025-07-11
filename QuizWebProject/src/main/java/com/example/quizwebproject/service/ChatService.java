@@ -32,7 +32,7 @@ public class ChatService {
 
     public List<Message> getMessagesByChatId(Long chatId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return chatRepo.findTopByChatIdOrderByDateAsc(chatId, pageable).getContent();
+        return messagesRepo.findTopByChatIdOrderByDateAsc(chatId, pageable).getContent();
     }
 
     public List<Message> seeAllMessagesByChatId(Long chatId) {

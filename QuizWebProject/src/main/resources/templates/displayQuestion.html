@@ -20,13 +20,7 @@
       margin-top: 2rem;
     }
 
-    h2 {
-      border-bottom: 2px solid #4CAF50;
-      padding-bottom: 0.5rem;
-      margin-top: 2rem;
-    }
-
-    p {
+    h2, p {
       margin: 1rem 0;
     }
 
@@ -61,13 +55,15 @@
         ${quiz.description},
         ${quiz.type},
         ${quiz.author != null ? quiz.author.username : 'Unknown'}
-  )}"></div>
+    )}"></div>
 
+  <!-- question number -->
   <h2 th:text="'Question ' + (${index} + 1)"></h2>
 
-  <!-- actual question input using fragments/questions -->
-  <div th:replace="~{fragments/questions :: questionOptions(${question})}"></div>
+  <!-- actual inputs -->
+  <div th:replace="~{fragments :: questionOptions(${question})}"></div>
 
+  <!-- only Submit Answer for immediate result -->
   <button type="submit">Submit Answer</button>
 </form>
 
@@ -83,14 +79,15 @@
         ${quiz.description},
         ${quiz.type},
         ${quiz.author != null ? quiz.author.username : 'Unknown'}
-  )}"></div>
+    )}"></div>
 
+  <!-- question number -->
   <h2 th:text="'Question ' + (${index} + 1)"></h2>
 
-  <!-- actual question input using fragments/questions -->
-  <div th:replace="~{fragments/questions :: questionOptions(${question})}"></div>
+  <!-- actual inputs -->
+  <div th:replace="~{fragments :: questionOptions(${question})}"></div>
 
-  <!-- direction flag for controller to track navigation -->
+  <!-- hidden flag: true = Next, false = Previous -->
   <input type="hidden" name="wentForward" id="wentForward" value="true"/>
 
   <div>
@@ -108,10 +105,11 @@
       Next
     </button>
 
-    <!-- Submit button for final question -->
+    <!-- Submit Quiz on last page -->
     <button th:if="${!hasNext}"
             type="submit"
-            th:formaction="@{/quiz/{id}/question/{index}/mulPages/finalResult(id=${quiz.id}, index=${index})}">
+            th:formaction="@{/quiz/{id}/question/{index}/mulPages/finalResult(
+                                    id=${quiz.id}, index=${index})}">
       Submit Quiz
     </button>
   </div>

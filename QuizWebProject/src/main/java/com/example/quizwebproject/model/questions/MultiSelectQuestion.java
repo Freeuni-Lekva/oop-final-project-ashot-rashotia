@@ -34,6 +34,9 @@ public class MultiSelectQuestion extends Question {
     }
 
     @Override
+    public String getQuestionType() { return "MultiSelectQuestion"; }
+
+    @Override
     public void setMaxPoints(Double maxPoints) {
         setRawMaxPoints(maxPoints);
     }

@@ -2,25 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Question Fragments</title>
+  <title>Common Fragments</title>
 </head>
 <body>
 
-<!-- QUESTION FRAGMENT -->
+<!-- Quiz Header Fragment -->
+<div th:fragment="quizHeader(description, type, author)">
+  <header style="background-color:#f0f0f0; padding:1rem; border-radius:8px;">
+    <h1 th:text="${description}">[Quiz Description]</h1>
+    <p>
+      <strong>Type:</strong> <span th:text="${type}">[Quiz Type]</span>
+      &nbsp;|&nbsp;
+      <strong>Author:</strong> <span th:text="${author}">[Author]</span>
+    </p>
+    <hr />
+  </header>
+</div>
+
+<!-- Question Options Fragment -->
 <div th:fragment="questionOptions(question)">
   <input type="hidden" name="questionIds" th:value="${question.id}" />
 
   <p><strong>Question:</strong> <span th:text="${question.question}">Question content</span></p>
 
   <!-- TestQuestion -->
-  <div th:if="${question.getClass().simpleName == 'TestQuestion'}">
+  <div th:if="${question.questionType == 'TestQuestion'}">
     <p>Choose the correct answer(s):</p>
     <ul>
       <li th:each="opt : ${question.savAnswers}">
         <label>
           <input type="checkbox"
                  th:name="${'answer_' + question.id}"
-                 th:value="${opt}" />
+                 th:value="${opt}"
+                 th:checked="${#lists.contains(question.userAnswer, opt)}" />
           <span th:text="${opt}">Answer Option</span>
         </label>
       </li>
@@ -28,46 +42,40 @@
   </div>
 
   <!-- ResponseQuestion -->
-  <div th:if="${question.getClass().simpleName == 'ResponseQuestion'}">
+  <div th:if="${question.questionType == 'ResponseQuestion'}">
     <label th:for="${'answer_' + question.id}">Your Answer:</label>
     <input type="text"
            th:id="${'answer_' + question.id}"
            th:name="${'answer_' + question.id}"
-           th:value="${question.userAnswer}"
-           placeholder="Type your answer here..." />
+           th:value="${question.userAnswer}" />
   </div>
 
   <!-- FillBlankQuestion -->
-  <div th:if="${question.getClass().simpleName == 'FillBlankQuestion'}">
+  <div th:if="${question.questionType == 'FillBlankQuestion'}">
     <label th:for="${'answer_' + question.id}">Your Answer:</label>
     <input type="text"
            th:id="${'answer_' + question.id}"
            th:name="${'answer_' + question.id}"
-           th:value="${question.userAnswer}"
-           placeholder="Type your answer here..." />
+           th:value="${question.userAnswer}" />
   </div>
 
   <!-- MatchingQuestion -->
-  <div th:if="${question.getClass().simpleName == 'MatchingQuestion'}">
+  <div th:if="${question.questionType == 'MatchingQuestion'}">
     <p><strong>Match the items:</strong></p>
     <table>
       <thead>
-      <tr>
-        <th>Left</th>
-        <th>Match with</th>
-      </tr>
+      <tr><th>Left</th><th>Match with</th></tr>
       </thead>
       <tbody>
       <tr th:each="leftItem, iterStat : ${question.leftItems}">
-        <td th:text="${leftItem}">Left</td>
+        <td th:text="${leftItem}"></td>
         <td>
           <select th:name="${'answer_' + question.id + '_' + iterStat.index}">
             <option value="">-- Select --</option>
             <option th:each="rightItem : ${question.rightItems}"
                     th:value="${rightItem}"
                     th:text="${rightItem}"
-                    th:selected="${question.userMatches.size() > iterStat.index
-                                    and question.userMatches[iterStat.index] == rightItem}">
+                    th:selected="${question.userMatches != null and question.userMatches.size() > iterStat.index and question.userMatches[iterStat.index] == rightItem}">
             </option>
           </select>
         </td>
@@ -77,7 +85,7 @@
   </div>
 
   <!-- MultiSelectQuestion -->
-  <div th:if="${question.getClass().simpleName == 'MultiSelectQuestion'}">
+  <div th:if="${question.questionType == 'MultiSelectQuestion'}">
     <p>Select all correct options:</p>
     <ul>
       <li th:each="opt : ${question.options}">
@@ -85,41 +93,37 @@
           <input type="checkbox"
                  th:name="${'answer_' + question.id}"
                  th:value="${opt}"
-                 th:checked="${#strings.contains(question.userAnswer, opt)}" />
-          <span th:text="${opt}">Option</span>
+                 th:checked="${#lists.contains(question.userAnswer, opt)}" />
+          <span th:text="${opt}"></span>
         </label>
       </li>
     </ul>
   </div>
 
   <!-- MultiAnswerQuestion -->
-  <div th:if="${question.getClass().simpleName == 'MultiAnswerQuestion'}">
+  <div th:if="${question.questionType == 'MultiAnswerQuestion'}">
     <p>Provide all answers (comma separated):</p>
     <input type="text"
            th:name="${'answer_' + question.id}"
-           th:value="${question.userAnswer}"
-           placeholder="Enter your answers separated by commas" />
+           th:value="${question.userAnswer}" />
   </div>
 
   <!-- PictureResponseQuestion -->
-  <div th:if="${question.getClass().simpleName == 'PictureResponseQuestion'}">
-    <p><strong th:text="${question.question}">Question</strong></p>
+  <div th:if="${question.questionType == 'PictureResponseQuestion'}">
     <img th:src="@{${question.imageUrl}}" alt="Question image"
          style="max-width: 400px; max-height: 300px;" />
     <label th:for="${'answer_' + question.id}">Your Answer:</label>
     <input type="text"
            th:id="${'answer_' + question.id}"
            th:name="${'answer_' + question.id}"
-           th:value="${question.userAnswer}"
-           placeholder="Type your answer here..." />
+           th:value="${question.userAnswer}" />
   </div>
 
   <!-- GradedQuestion -->
-  <div th:if="${question.getClass().simpleName == 'GradedQuestion'}">
+  <div th:if="${question.questionType == 'GradedQuestion'}">
     <label th:for="${'answer_' + question.id}">Your Answer:</label>
     <textarea th:id="${'answer_' + question.id}"
-              th:name="${'answer_' + question.id}"
-              placeholder="Enter your response here...">[[${question.userAnswer}]]</textarea>
+              th:name="${'answer_' + question.id}">[[${question.userAnswer}]]</textarea>
     <div th:if="${question.graded}">
       <p><strong>Score:</strong> <span th:text="${question.score}">0</span></p>
       <p><strong>Feedback:</strong> <span th:text="${question.feedback}">No feedback</span></p>
@@ -127,14 +131,12 @@
   </div>
 
   <!-- AutoGeneratedQuestion -->
-  <div th:if="${question.getClass().simpleName == 'AutoGeneratedQuestion'}">
-    <p><strong th:text="${question.question}">Auto-generated question</strong></p>
+  <div th:if="${question.questionType == 'AutoGeneratedQuestion'}">
     <label th:for="${'answer_' + question.id}">Your Answer:</label>
     <input type="text"
            th:id="${'answer_' + question.id}"
            th:name="${'answer_' + question.id}"
-           th:value="${question.userAnswer}"
-           placeholder="Type your answer here..." />
+           th:value="${question.userAnswer}" />
   </div>
 </div>
 

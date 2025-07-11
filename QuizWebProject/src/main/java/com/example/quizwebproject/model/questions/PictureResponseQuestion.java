@@ -33,6 +33,9 @@ public class PictureResponseQuestion extends Question {
         setRawCorrectAnswers(correctAnswer);
     }
 
+    @Override
+    public String getQuestionType() { return "PictureResponseQuestion"; }
+
     public String getCorrectAnswer() {
         return this.correctAnswer;
     }

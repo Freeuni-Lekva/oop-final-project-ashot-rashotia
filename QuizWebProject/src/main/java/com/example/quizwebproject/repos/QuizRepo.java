@@ -1,9 +1,7 @@
 package com.example.quizwebproject.repos;
 
 import com.example.quizwebproject.model.quizes.Quiz;
-import com.example.quizwebproject.model.quizes.QuizResult;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +13,6 @@ import java.util.List;
 
 @Repository
 public interface QuizRepo extends JpaRepository<Quiz, Long> {
-    List<Quiz> findByType(String type);
 
     @Query("SELECT q FROM Quiz q ORDER BY SIZE(q.history) DESC")
     Page<Quiz> findByPopularity(Pageable pageable);

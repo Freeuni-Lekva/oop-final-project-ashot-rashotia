@@ -42,7 +42,7 @@ public class ChatController {
         model.addAttribute("chatId", chatId);
         model.addAttribute("messages", messages);
         model.addAttribute("user",user);
-        return "chat";
+        return "chats/chat";
     }
 
     @GetMapping("/chatWithOneUser")
