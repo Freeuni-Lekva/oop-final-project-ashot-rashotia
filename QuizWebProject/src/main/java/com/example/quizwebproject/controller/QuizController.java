@@ -57,6 +57,9 @@ public class QuizController {
             Double x = 0D;
             if(quiz.isQuickResults()) session.setAttribute("resultSoFar", x);
 
+            User user = (User) session.getAttribute("user");
+            userService.givePracticeMakesPerfectToUser(user.getId());
+
             return "redirect:/quiz/" + id + "/practiceMode/question/0";
         }
     }
@@ -170,6 +173,7 @@ public class QuizController {
         for(String answ : userAnswers){
             answer.append(answ).append(",");
         }
+
         question.setUserAnswer(answer.toString());
 
         Double x = (Double) session.getAttribute("resultSoFar");
@@ -289,5 +293,3 @@ public class QuizController {
         return "allQuizzes";
     }
 }
-
-

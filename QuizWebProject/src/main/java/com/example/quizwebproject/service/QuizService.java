@@ -5,17 +5,17 @@ import com.example.quizwebproject.model.questions.Question;
 import com.example.quizwebproject.model.quizes.Quiz;
 import com.example.quizwebproject.model.quizes.QuizResult;
 import com.example.quizwebproject.model.users.User;
+import com.example.quizwebproject.model.users.achievements.Achievements;
+import com.example.quizwebproject.model.users.achievements.IAmTheGreatest;
 import com.example.quizwebproject.model.users.activities.FriendActivity;
 import com.example.quizwebproject.model.users.activities.QuizTaken;
-import com.example.quizwebproject.repos.FriendActivityRepo;
-import com.example.quizwebproject.repos.QuizRepo;
-import com.example.quizwebproject.repos.QuizResultRepo;
-import com.example.quizwebproject.repos.UserRepo;
+import com.example.quizwebproject.repos.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -23,18 +23,18 @@ import java.util.List;
 @Transactional
 public class QuizService {
     private final QuizRepo quizRepo;
-
     private final UserRepo userRepo;
-
     private final FriendActivityRepo fracRepo;
-
     private final QuizResultRepo quizResultRepo;
+    private final AchievementsRepo achievementsRepo;
 
-    public QuizService(QuizRepo quizRepo, UserRepo userRepo, FriendActivityRepo fracRepo, QuizResultRepo quizResultRepo) {
+    public QuizService(QuizRepo quizRepo, UserRepo userRepo, FriendActivityRepo fracRepo,
+                       QuizResultRepo quizResultRepo, AchievementsRepo achievementsRepo) {
         this.userRepo = userRepo;
         this.quizRepo = quizRepo;
         this.fracRepo = fracRepo;
         this.quizResultRepo = quizResultRepo;
+        this.achievementsRepo = achievementsRepo;
     }
 
     public Quiz getQuizById(Long id) {
@@ -56,6 +56,9 @@ public class QuizService {
         if(quiz == null || user == null) throw new IllegalArgumentException("Quiz or User not found");
 
         QuizResult result = new QuizResult(elapsedTime, score, quiz, user);
+
+        quizResultRepo.save(result);
+
         quiz.getHistory().add(result);
         user.getUserHistory().add(result);
 
@@ -63,6 +66,24 @@ public class QuizService {
         User us = userRepo.findById(quiz.getAuthor().getId()).orElseThrow(()->new RuntimeException("User not found"));
 
         fracRepo.save(act);
+
+        List<QuizResult> allResults = quizResultRepo.getByQuizId(quizId);
+        QuizResult bestScore = allResults.stream()
+                .sorted(Comparator
+                        .comparing(QuizResult::getPoints, Comparator.reverseOrder()) // highest points first
+                        .thenComparing(QuizResult::getTime)                           // shortest time
+                        .thenComparing(QuizResult::getResultDate, Comparator.reverseOrder()) // most recent
+                )
+                .findFirst()
+                .orElse(null);
+
+
+        if(bestScore != null && bestScore.getId().equals(result.getId())) {
+            Achievements ach = new IAmTheGreatest(user);
+            achievementsRepo.save(ach);
+            user.getAchievements().add(ach);
+        }
+
     }
 
     public List<Quiz> getAllQuizzs() {
