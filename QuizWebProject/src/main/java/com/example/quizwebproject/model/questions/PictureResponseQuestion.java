@@ -8,7 +8,9 @@ import java.util.List;
 @Entity
 public class PictureResponseQuestion extends Question {
 
+    @Lob
     private String imageUrl;
+
     private String correctAnswer;
 
     public PictureResponseQuestion() {}
@@ -32,6 +34,9 @@ public class PictureResponseQuestion extends Question {
         this.correctAnswer = correctAnswer;
         setRawCorrectAnswers(correctAnswer);
     }
+
+    @Override
+    public String getQuestionType() { return "PictureResponseQuestion"; }
 
     public String getCorrectAnswer() {
         return this.correctAnswer;
@@ -83,12 +88,14 @@ public class PictureResponseQuestion extends Question {
     public double getResult() {
         String user = getRawUserAnswer();
         if (user == null || user.isBlank()) return 0.0;
-
         String u = user.trim().replaceAll("\\s+", "").toLowerCase();
+        if (u.endsWith(",")) {
+            u = u.substring(0, u.length() - 1);
+        }
         String c = correctAnswer.trim().replaceAll("\\s+", "").toLowerCase();
-
         return u.equals(c) ? 100.0 : 0.0;
     }
+
 
     @Override
     public String toString() {

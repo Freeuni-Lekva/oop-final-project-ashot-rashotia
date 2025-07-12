@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
   <meta charset="UTF-8" />
   <title th:text="'Question ' + (${index} + 1) + ' of ' + ${quiz.description}">Question Page</title>
@@ -20,13 +20,7 @@
       margin-top: 2rem;
     }
 
-    h2 {
-      border-bottom: 2px solid #4CAF50;
-      padding-bottom: 0.5rem;
-      margin-top: 2rem;
-    }
-
-    p {
+    h2, p {
       margin: 1rem 0;
     }
 
@@ -61,13 +55,15 @@
         ${quiz.description},
         ${quiz.type},
         ${quiz.author != null ? quiz.author.username : 'Unknown'}
-  )}"></div>
+    )}"></div>
 
-  <h2 th:text="'Question ' + (${index} + 1)"></h2>
+  <!-- question number -->
+  <p th:text="'Question ' + (${index} + 1)"></p>
 
-  <!-- actual question input using fragments/questions -->
-  <div th:replace="~{fragments/questions :: questionOptions(${question})}"></div>
+  <!-- actual inputs -->
+  <div th:replace="~{fragments :: questionOptions(${question})}"></div>
 
+  <!-- only Submit Answer for immediate result -->
   <button type="submit">Submit Answer</button>
 </form>
 
@@ -83,35 +79,37 @@
         ${quiz.description},
         ${quiz.type},
         ${quiz.author != null ? quiz.author.username : 'Unknown'}
-  )}"></div>
+    )}"></div>
 
-  <h2 th:text="'Question ' + (${index} + 1)"></h2>
+  <!-- question number -->
+  <p th:text="'Question ' + (${index} + 1)"></p>
 
-  <!-- actual question input using fragments/questions -->
-  <div th:replace="~{fragments/questions :: questionOptions(${question})}"></div>
+  <!-- actual inputs -->
+  <div th:replace="~{fragments :: questionOptions(${question})}"></div>
 
-  <!-- direction flag for controller to track navigation -->
+  <!-- hidden flags -->
   <input type="hidden" name="wentForward" id="wentForward" value="true"/>
+  <input type="hidden" name="submittedQuiz" id="submittedQuiz" value="false"/>
 
   <div>
     <!-- Previous button -->
     <button th:if="${hasPrevious}"
             type="submit"
-            onclick="document.getElementById('wentForward').value='false'">
+            onclick="document.getElementById('wentForward').value='false';">
       Previous
     </button>
 
     <!-- Next button -->
     <button th:if="${hasNext}"
             type="submit"
-            onclick="document.getElementById('wentForward').value='true'">
+            onclick="document.getElementById('wentForward').value='true';">
       Next
     </button>
 
-    <!-- Submit button for final question -->
+    <!-- Submit Quiz on last page -->
     <button th:if="${!hasNext}"
             type="submit"
-            th:formaction="@{/quiz/{id}/question/{index}/mulPages/finalResult(id=${quiz.id}, index=${index})}">
+            onclick="document.getElementById('wentForward').value='true'; document.getElementById('submittedQuiz').value='true';">
       Submit Quiz
     </button>
   </div>

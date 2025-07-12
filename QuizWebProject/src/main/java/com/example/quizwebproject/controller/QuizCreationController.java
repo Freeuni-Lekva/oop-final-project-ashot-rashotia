@@ -6,7 +6,6 @@ import com.example.quizwebproject.model.users.User;
 import com.example.quizwebproject.service.QuizCreationService;
 import com.example.quizwebproject.service.QuizService;
 import jakarta.servlet.http.HttpSession;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -68,18 +67,15 @@ public class QuizCreationController {
                            @PathVariable int index,
                            @RequestParam("questionText") String question,
                            @RequestParam("questionType") String questionType,
-                           @RequestParam("correctAnswer") String answer,
+                           @RequestParam(value = "correctAnswer", required = false) String answer,
                            @RequestParam(value = "possibleAnswers", required = false, defaultValue = "") String posAnswers,
                            @RequestParam("category") String category,
                            @RequestParam("maxPoints") Double maxPoints,
-                           @RequestParam(value = "ordered", required = false, defaultValue = "false") boolean order,
-                           @RequestParam(value = "min", required = false) int min, // minimum integer value
-                           @RequestParam(value = "max", required = false) int max, // maximum integer value
+                           @RequestParam(value = "ordered", required = false, defaultValue = "false") Boolean order,
+                           @RequestParam(value = "min", required = false) Integer min, // minimum integer value
+                           @RequestParam(value = "max", required = false) Integer max, // maximum integer value
                            @RequestParam(value = "leftItems", required = false) List<String> leftItems,
                            @RequestParam(value = "rightItems", required = false) List<String> rightItems,
-                           @RequestParam(value = "correctMatches", required = false) List<String> correctMatches,
-                           @RequestParam(value = "correctAnswers", required = false) List<String> correctAnswers,
-                           @RequestParam(value = "options", required = false) List<String> options,
                            @RequestParam(value = "imageURL", required = false, defaultValue = "") String imageURL,
                            Model model) {
 
@@ -124,32 +120,8 @@ public class QuizCreationController {
                     quizCreationService.editQuestionInQuiz(id,index,q);
                 }
                 break;
-            case "GradedQuestion":
-                q = new GradedQuestion(question, category, maxPoints);
-                if(index==quiz.getQuestions().size()){
-                    quizCreationService.addNewQuestionToQuiz(id, q);
-                }else{
-                    quizCreationService.editQuestionInQuiz(id,index,q);
-                }
-                break;
             case "MatchingQuestion":
-                q = new MatchingQuestion(question, leftItems, rightItems, correctMatches, category, maxPoints);
-                if(index==quiz.getQuestions().size()){
-                    quizCreationService.addNewQuestionToQuiz(id, q);
-                }else{
-                    quizCreationService.editQuestionInQuiz(id,index,q);
-                }
-                break;
-            case "MultiAnswerQuestion":
-                q = new MultiAnswerQuestion(question, correctAnswers, category, order, maxPoints);
-                if(index==quiz.getQuestions().size()){
-                    quizCreationService.addNewQuestionToQuiz(id, q);
-                }else{
-                    quizCreationService.editQuestionInQuiz(id,index,q);
-                }
-                break;
-            case "MultiSelectQuestion":
-                q = new MultiSelectQuestion(question, options, correctAnswers, category, maxPoints);
+                q = new MatchingQuestion(question, leftItems, rightItems, category, maxPoints);
                 if(index==quiz.getQuestions().size()){
                     quizCreationService.addNewQuestionToQuiz(id, q);
                 }else{

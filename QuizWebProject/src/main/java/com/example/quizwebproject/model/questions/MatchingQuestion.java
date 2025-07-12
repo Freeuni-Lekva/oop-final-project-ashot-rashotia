@@ -16,25 +16,30 @@ public class MatchingQuestion extends Question {
     @Lob
     private String rightItems;
 
-    @Lob
-    private String correctMatches;
-
     public MatchingQuestion() {}
-
 
     public MatchingQuestion(
             String question,
             List<String> leftItems,
             List<String> rightItems,
-            List<String> correctMatches,
             String category,
             Double maxPoints) {
 
-        super(question, String.join(",", correctMatches), category, maxPoints); // store correctMatches in base
-        this.leftItems = String.join(",", leftItems);
-        this.rightItems = String.join(",", rightItems);
-        this.correctMatches = String.join(",", correctMatches);
+        super(
+                question,
+                String.join(",", rightItems != null ? rightItems : List.of()),
+                category,
+                maxPoints
+        );
+
+        this.leftItems = String.join(",", leftItems != null ? leftItems : List.of());
+        this.rightItems = String.join(",", rightItems != null ? rightItems : List.of());
         setRawUserAnswer("");
+    }
+
+    @Override
+    public String getQuestionType() {
+        return "MatchingQuestion";
     }
 
     public List<String> getLeftItems() {
@@ -55,12 +60,7 @@ public class MatchingQuestion extends Question {
 
     @Override
     public List<String> getCorrectAnswers() {
-        return parseList(correctMatches);
-    }
-
-    public void setCorrectAnswers(List<String> correctMatches) {
-        this.correctMatches = String.join(",", correctMatches);
-        setRawCorrectAnswers(this.correctMatches);
+        return getRightItems(); // Treat rightItems as correct answers
     }
 
     public List<String> getUserMatches() {
@@ -130,7 +130,7 @@ public class MatchingQuestion extends Question {
                 ", question='" + getQuestion() + '\'' +
                 ", leftItems=" + getLeftItems() +
                 ", rightItems=" + getRightItems() +
-                ", correctMatches=" + getCorrectAnswers() +
+                ", correctAnswers=" + getCorrectAnswers() +
                 ", userMatches=" + getUserMatches() +
                 ", result=" + getResult() +
                 ", category='" + getCategory() + '\'' +

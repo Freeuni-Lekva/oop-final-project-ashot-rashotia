@@ -77,7 +77,7 @@ public class FriendController {
         return  "searchFriends";
     }
 
-    @GetMapping("/showAllFriendsActs")
+    @GetMapping("/showAllFriendActs")
     public String showAllFriendActs(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
