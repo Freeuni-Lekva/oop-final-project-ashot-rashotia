@@ -4,6 +4,7 @@ import com.example.quizwebproject.model.quizes.Quiz;
 import com.example.quizwebproject.model.quizes.QuizResult;
 import com.example.quizwebproject.model.users.achievements.Achievements;
 import com.example.quizwebproject.model.users.chat.Chat;
+import com.example.quizwebproject.model.users.chat.Message;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ public class User {
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendRequest> pendingRequests = new ArrayList<>();
 
-    // TODO : can prob change this
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<QuizResult> userHistory = new ArrayList<>();
 
@@ -49,6 +49,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Achievements> achis;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> messages = new ArrayList<>();
 
     public User() {}
 
@@ -99,12 +102,21 @@ public class User {
         }
         chats.clear();
 
-        List<QuizResult> qrs = this.userHistory;
+        List<QuizResult> qrs = new ArrayList<>(userHistory);
         for (QuizResult qr : qrs) {
-            List<QuizResult> quizQrs = qr.getQuiz().getHistory();
-            quizQrs.remove(qr);
-            qr.setQuiz(null);
+            if (qr.getQuiz() != null) {
+                qr.getQuiz().getHistory().remove(qr);
+                qr.setQuiz(null);
+            }
             qr.setUser(null);
+        }
+        userHistory.clear();
+
+        if (messages != null) {
+            for (Message m : new ArrayList<>(messages)) {
+                m.setUser(null);
+            }
+            messages.clear();
         }
     }
 
@@ -112,10 +124,7 @@ public class User {
 
     public List<QuizResult> getUserHistory() { return userHistory; }
 
-    // TODO : this and its usage in quiz class must move to service layer
     public void addResultToHistory(QuizResult result) {
-        // This logic should ideally be placed in the service layer
-        // Left here for now as per current architecture
         userHistory.add(result);
     }
 
@@ -135,7 +144,6 @@ public class User {
                 .max(QuizResult.QUIZ_RESULT_COMPARATOR)
                 .orElse(null);
     }
-
 
     private String hashPassword(String pas) {
         return Base64.getEncoder().encodeToString(pas.getBytes());

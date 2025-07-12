@@ -173,6 +173,7 @@ public class QuizController {
         for(String answ : userAnswers){
             answer.append(answ).append(",");
         }
+
         question.setUserAnswer(answer.toString());
 
         Double x = (Double) session.getAttribute("resultSoFar");
@@ -292,5 +293,3 @@ public class QuizController {
         return "allQuizzes";
     }
 }
-
-

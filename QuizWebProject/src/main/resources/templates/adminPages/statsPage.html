@@ -25,6 +25,22 @@
       text-align: center;
     }
 
+    .admin-button {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background-color: #5b86e5;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .admin-button:hover {
+      background-color: #4a6fb3;
+    }
+
     h1 {
       margin-bottom: 30px;
       color: #333;
@@ -43,6 +59,7 @@
 </head>
 <body>
 <div class="stats-container">
+  <a th:href="@{/admin}" class="admin-button">← Back to Admin Page</a>
   <h1>System Stats</h1>
   <p class="stat">Total Users: <span th:text="${userCount}"></span></p>
   <p class="stat">Total Quizzes Taken: <span th:text="${totalQuizsTaken}"></span></p>
