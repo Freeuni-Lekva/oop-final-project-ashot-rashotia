@@ -24,6 +24,22 @@
       max-width: 600px;
     }
 
+    .admin-button {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      background-color: #5b86e5;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .admin-button:hover {
+      background-color: #4a6fb3;
+    }
+
     h1 {
       text-align: center;
       margin-bottom: 30px;
@@ -67,6 +83,7 @@
 </head>
 <body>
 <div class="announcement-container">
+  <a th:href="@{/admin}" class="admin-button">← Back to Admin Page</a>
   <h1>Create New Announcement</h1>
   <form th:action="@{'/admin/newAnnouncement'}" method="post">
     <label for="title">Title:</label>
