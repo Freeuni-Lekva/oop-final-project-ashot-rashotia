@@ -93,7 +93,7 @@ public class PictureResponseQuestion extends Question {
             u = u.substring(0, u.length() - 1);
         }
         String c = correctAnswer.trim().replaceAll("\\s+", "").toLowerCase();
-        return u.equals(c) ? 100.0 : 0.0;
+        return u.equals(c) ? getMaxPoints() : 0.0;
     }
 
 

@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO : 1) view_shi mchirdeba chatistvis raime view saxelad chat.html an rame
-//        2) group chatis gaketebac ioli dasamatebelia
-
 @Controller
 public class ChatController {
     private final ChatService chatService;

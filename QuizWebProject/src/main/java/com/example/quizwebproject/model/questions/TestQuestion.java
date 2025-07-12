@@ -119,7 +119,7 @@ public class TestQuestion extends Question {
         }
 
         x = Math.min(x, correct.size());
-        return 100.0 * x / correct.size();
+        return getMaxPoints() * x / correct.size();
     }
 
     @Override

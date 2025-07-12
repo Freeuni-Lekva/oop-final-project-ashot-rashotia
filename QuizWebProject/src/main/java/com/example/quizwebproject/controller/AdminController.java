@@ -63,7 +63,11 @@ public class AdminController {
 
     @PostMapping("/admin/promotion")
     public String promoteUser(@RequestParam("userId") Long userId) {
-        adminService.promoteUser(userId);
+        try {
+            adminService.promoteUser(userId);
+        } catch (Exception e) {
+            return "errorPages/userNotFound";
+        }
         return "redirect:/admin/user";
     }
 

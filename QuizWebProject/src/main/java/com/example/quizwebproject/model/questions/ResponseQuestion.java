@@ -100,7 +100,7 @@ public class ResponseQuestion extends Question {
         }
 
         int dist = dp[n][m];
-        return 100 * (1.0 - (double) dist / Math.max(n, m));
+        return getMaxPoints() * (1.0 - (double) dist / Math.max(n, m));
     }
 
     @Override

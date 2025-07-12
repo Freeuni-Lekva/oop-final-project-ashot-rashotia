@@ -67,7 +67,7 @@ public class FillBlankQuestion extends Question {
         String correct = getRawCorrectAnswers();
         if (user == null || correct == null) return 0.0;
 
-        return user.trim().equalsIgnoreCase(correct.trim()) ? 100.0 : 0.0;
+        return user.trim().equalsIgnoreCase(correct.trim()) ? getMaxPoints() : 0.0;
     }
 
     @Override

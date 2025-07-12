@@ -29,7 +29,11 @@ public class ChallengeController {
         User sender = (User) session.getAttribute("user");
         if (sender == null) return "redirect:/login";
 
-        challengeService.sendChallenge(sender.getId(),recieverId,quizId);
+        try {
+            challengeService.sendChallenge(sender.getId(),recieverId,quizId);
+        } catch (Exception e) {
+            return "errorPages/userNotFound";
+        }
 
         return "redirect:/quiz/startQuiz/" + quizId;
     }
@@ -37,9 +41,13 @@ public class ChallengeController {
     @PostMapping("/challenge/accept")
     public String acceptChallenge(@RequestParam("chalId") Long chalId,
                                   RedirectAttributes redirectAttributes) {
-        ChallengeAcceptanceDTO dto = challengeService.acceptChallenge(chalId);
-        redirectAttributes.addFlashAttribute("dto", dto);
-        return "redirect:/quiz/startQuiz/" + dto.getQuiz().getId();
+        try {
+            ChallengeAcceptanceDTO dto = challengeService.acceptChallenge(chalId);
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/quiz/startQuiz/" + dto.getQuiz().getId();
+        } catch (Exception e) {
+            return "errorPages/userNotFound";
+        }
     }
 
     @PostMapping("/challenge/reject")
