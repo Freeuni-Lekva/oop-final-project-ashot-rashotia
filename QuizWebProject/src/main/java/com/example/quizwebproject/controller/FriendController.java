@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -33,11 +34,11 @@ public class FriendController {
         if (sen==null) {
             return "redirect:/login";
         }
-        FriendRequest req = friendService.sendFriendRequest(sen.getId(), receiverId);
-        if(req==null) {
-            redData.addAttribute("newFriendRequestSent", false);
-        } else {
-            redData.addAttribute("newFriendRequestSent", true);
+        try {
+            FriendRequest req = friendService.sendFriendRequest(sen.getId(), receiverId);
+            redData.addFlashAttribute("newFriendRequestSent", req != null);
+        } catch (Exception e) {
+            redData.addFlashAttribute("newFriendRequestSent", false);
         }
         return "redirect:/user/"+receiverId;
     }
@@ -63,17 +64,31 @@ public class FriendController {
 
     @GetMapping("/searchFriends")
     public String searchFriends(HttpSession session, Model model) {
-        User user = (User)session.getAttribute("user");
-        List<User> nonFriends = friendService.getNonFriendUsers(user.getId());
-        model.addAttribute("nonFriends", nonFriends);
-        return  "friendStuff/searchFriends";
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        try {
+            List<User> nonFriends = friendService.getNonFriendUsers(user.getId());
+            model.addAttribute("nonFriends", nonFriends);
+        } catch (Exception e) {
+            model.addAttribute("nonFriends", Collections.emptyList());
+        }
+        return  "searchFriends";
     }
 
     @GetMapping("/showAllFriendActs")
     public String showAllFriendActs(HttpSession session, Model model) {
-        User user = (User)session.getAttribute("user");
-        List<FriendActivity> acts = homepageService.getRecentFriendActivities(user.getId(), Pageable.unpaged());
-        model.addAttribute("acts", acts);
-        return "friendStuff/showAllFriendActs";
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        try {
+            List<FriendActivity> acts = homepageService.getRecentFriendActivities(user.getId(), Pageable.unpaged());
+            model.addAttribute("acts", acts);
+        } catch (Exception e) {
+            model.addAttribute("acts", Collections.emptyList());
+        }
+        return "showAllFriendActs";
     }
 }
