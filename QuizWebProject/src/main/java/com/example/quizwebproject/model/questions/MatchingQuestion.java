@@ -85,7 +85,7 @@ public class MatchingQuestion extends Question {
             }
         }
 
-        return 100.0 * matched / correct.size();
+        return getMaxPoints() * matched / correct.size();
     }
 
     @Override
